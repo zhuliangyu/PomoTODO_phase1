@@ -129,40 +129,60 @@ public class DueDate {
     // Example, assume it is 8:00 AM on a Monday
     // then any task with due date between 00:00 AM today (Monday) and 11:59PM the following Sunday is due within a week
     public boolean isDueWithinAWeek() {
-
-        Date nowAfterOneWeek = postponeNdays(nowDate, 7);
         Calendar cal = Calendar.getInstance();
-        cal.setTime(nowAfterOneWeek);
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
-        cal.set(Calendar.MINUTE,      cal.getMinimum(Calendar.MINUTE));
-        cal.set(Calendar.SECOND,      cal.getMinimum(Calendar.SECOND));
-        cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
-        nowAfterOneWeek = cal.getTime();
+
+        Date nowAfterOneWeek;
+        nowAfterOneWeek = resetDate(nowDate, 7,
+                cal.getMinimum(Calendar.HOUR_OF_DAY),
+                cal.getMinimum(Calendar.MINUTE),
+                cal.getMinimum(Calendar.SECOND),
+                cal.getMinimum(Calendar.MILLISECOND));
+
+//        cal.setTime(nowAfterOneWeek);
+//        int year = cal.get(Calendar.YEAR);
+//        int month = cal.get(Calendar.MONTH);
+//        int day = cal.get(Calendar.DAY_OF_MONTH);
+//        cal.set(Calendar.YEAR, year);
+//        cal.set(Calendar.MONTH, month);
+//        cal.set(Calendar.DATE, day);
+//        cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
+//        cal.set(Calendar.MINUTE,      cal.getMinimum(Calendar.MINUTE));
+//        cal.set(Calendar.SECOND,      cal.getMinimum(Calendar.SECOND));
+//        cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
+//        nowAfterOneWeek = cal.getTime();
 
 
         Date nowTruncated;
+
+//        cal2.set(Calendar.HOUR_OF_DAY, cal2.getMaximum(Calendar.HOUR_OF_DAY));
+//        cal2.set(Calendar.MINUTE,      cal2.getMaximum(Calendar.MINUTE));
+//        cal2.set(Calendar.SECOND,      cal2.getMaximum(Calendar.SECOND));
+//        cal2.set(Calendar.MILLISECOND, cal2.getMaximum(Calendar.MILLISECOND));
+        nowTruncated = resetDate(nowDate, -1,
+                cal.getMaximum(Calendar.HOUR_OF_DAY),
+                cal.getMaximum(Calendar.MINUTE),
+                cal.getMaximum(Calendar.SECOND),
+                cal.getMaximum(Calendar.MILLISECOND));
+
+        return (myDueDate.before(nowAfterOneWeek) && myDueDate.after(nowTruncated));
+    }
+
+    private Date resetDate(Date nowDate, int days, int hour, int min, int sec, int millSec) {
+        Date nowTruncated;
         Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(postponeNdays(nowDate, -1));
+        cal2.setTime(postponeNdays(nowDate, days));
         int year2 = cal2.get(Calendar.YEAR);
         int month2 = cal2.get(Calendar.MONTH);
         int day2 = cal2.get(Calendar.DAY_OF_MONTH);
         cal2.set(Calendar.YEAR, year2);
         cal2.set(Calendar.MONTH, month2);
         cal2.set(Calendar.DATE, day2);
-        cal2.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
-        cal2.set(Calendar.MINUTE,      cal.getMaximum(Calendar.MINUTE));
-        cal2.set(Calendar.SECOND,      cal.getMaximum(Calendar.SECOND));
-        cal2.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+        cal2.set(Calendar.HOUR_OF_DAY, hour);
+        cal2.set(Calendar.MINUTE, min);
+        cal2.set(Calendar.SECOND, sec);
+        cal2.set(Calendar.MILLISECOND, millSec);
         nowTruncated = cal2.getTime();
-
-
-        return (myDueDate.before(nowAfterOneWeek) && this.myDueDate.after(nowTruncated));
+        return nowTruncated;
     }
 
     // EFFECTS: returns a string representation of due date in the following format

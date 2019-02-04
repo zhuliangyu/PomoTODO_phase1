@@ -95,6 +95,7 @@ public class TestDueDate {
 
 
     }
+
     @Test
     public void testIsDueToday() {
         DueDate dueDate1 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 20, 10, 30).getTime());
@@ -140,6 +141,14 @@ public class TestDueDate {
         dueDate3.nowDate = new GregorianCalendar(2019, 0, 7, 8, 50).getTime();
 
         assertFalse(dueDate3.isDueWithinAWeek());
+
+    }
+
+    @Test
+    public void testToString() {
+        DueDate dueDate1 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime());
+
+        assertEquals("Fri Jan 25 2019 10:30 AM", dueDate1.toString());
 
     }
 

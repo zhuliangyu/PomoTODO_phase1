@@ -130,7 +130,7 @@ public class DueDate {
     // then any task with due date between 00:00 AM today (Monday) and 11:59PM the following Sunday is due within a week
     public boolean isDueWithinAWeek() {
 
-        Date nowAfterOneWeek = postponeNdays(nowDate, 7);
+        Date nowAfterOneWeek = postponeNdays(nowDate, 8);
         Calendar cal = Calendar.getInstance();
         cal.setTime(nowAfterOneWeek);
         int year = cal.get(Calendar.YEAR);
@@ -139,9 +139,9 @@ public class DueDate {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         nowAfterOneWeek = cal.getTime();
         return (myDueDate.before(nowAfterOneWeek));

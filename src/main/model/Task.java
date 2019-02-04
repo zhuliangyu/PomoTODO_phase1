@@ -21,9 +21,13 @@ public class Task {
     //    If description does not contain meta-data, the task is set to have no due date,
     //    status of 'To Do', and default priority level (i.e., not important nor urgent)
     public Task(String description) {
-        this.descriptionTask = description;
-        setTagTask = new HashSet<Tag>() {
-        };
+        if (description == null) {
+            this.descriptionTask = "";
+        } else {
+            this.descriptionTask = description;
+        }
+
+        setTagTask = new HashSet<Tag>();
     }
 
     // REQUIRES: name is non-empty

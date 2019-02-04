@@ -25,6 +25,14 @@ public class TestTask {
     }
 
     @Test
+    public void testConstructorNull() {
+
+        Task task2 = new Task(null);
+
+        assertEquals("", task2.getDescription());
+    }
+
+    @Test
     public void testAddTag() {
 
         task.addTag("test");
@@ -118,6 +126,44 @@ public class TestTask {
         assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 2 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: [#project, #cpsc210]}", task.toString());
 
     }
+
+    @Test
+    public void testEqualsSameDescriptionDifferentDueDay() {
+        Task task = new Task("test");
+        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        Task task2 = new Task("test");
+        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        assertFalse(task.equals(task2));
+    }
+
+    @Test
+    public void testEqualsSameDescriptionSameDueDay() {
+        Task task = new Task("test");
+        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        Task task2 = new Task("test");
+        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        assertTrue(task.equals(task2));
+    }
+
+    @Test
+    public void testEqualsDiffDescriptionDiffDueDay() {
+        Task task = new Task("test1");
+        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        Task task2 = new Task("test");
+        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        assertFalse(task.equals(task2));
+    }
+
+
+    @Test
+    public void testEqualsDiffDescriptionSameDueDay() {
+        Task task = new Task("test");
+        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        Task task2 = new Task("test2");
+        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        assertFalse(task.equals(task2));
+    }
+
 
 
 }

@@ -4,8 +4,8 @@ package model;
 //     https://en.wikipedia.org/wiki/Time_management#The_Eisenhower_Method
 public class Priority {
 
-    public boolean urgent;
-    public boolean important;
+    protected boolean urgent;
+    protected boolean important;
 //    1 = urgent / important
 //    2 = not urgent / important
 //    3 = urgent / not important
@@ -38,7 +38,7 @@ public class Priority {
                 urgent = true;
                 important = false;
                 break;
-            case 4:
+            default:
                 urgent = false;
                 important = false;
                 break;

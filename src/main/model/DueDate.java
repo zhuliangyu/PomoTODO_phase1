@@ -130,7 +130,7 @@ public class DueDate {
     // then any task with due date between 00:00 AM today (Monday) and 11:59PM the following Sunday is due within a week
     public boolean isDueWithinAWeek() {
 
-        Date nowAfterOneWeek = postponeNdays(nowDate, 8);
+        Date nowAfterOneWeek = postponeNdays(nowDate, 7);
         Calendar cal = Calendar.getInstance();
         cal.setTime(nowAfterOneWeek);
         int year = cal.get(Calendar.YEAR);
@@ -139,12 +139,30 @@ public class DueDate {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE,      cal.getMinimum(Calendar.MINUTE));
+        cal.set(Calendar.SECOND,      cal.getMinimum(Calendar.SECOND));
+        cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
         nowAfterOneWeek = cal.getTime();
-        return (myDueDate.before(nowAfterOneWeek));
+
+
+        Date nowTruncated;
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(postponeNdays(nowDate, -1));
+        int year2 = cal2.get(Calendar.YEAR);
+        int month2 = cal2.get(Calendar.MONTH);
+        int day2 = cal2.get(Calendar.DAY_OF_MONTH);
+        cal2.set(Calendar.YEAR, year2);
+        cal2.set(Calendar.MONTH, month2);
+        cal2.set(Calendar.DATE, day2);
+        cal2.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
+        cal2.set(Calendar.MINUTE,      cal.getMaximum(Calendar.MINUTE));
+        cal2.set(Calendar.SECOND,      cal.getMaximum(Calendar.SECOND));
+        cal2.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+        nowTruncated = cal2.getTime();
+
+
+        return (myDueDate.before(nowAfterOneWeek) && this.myDueDate.after(nowTruncated));
     }
 
     // EFFECTS: returns a string representation of due date in the following format
@@ -153,7 +171,7 @@ public class DueDate {
     @Override
     public String toString() {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d yyyy h:mm a");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy hh:mm a");
         String stringDueDate = formatter.format(myDueDate);
         return stringDueDate;
     }

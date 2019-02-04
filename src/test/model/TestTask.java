@@ -123,7 +123,7 @@ public class TestTask {
         task.addTag("cpsc210");
         task.addTag("project");
 
-        assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 2 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: [#project, #cpsc210]}", task.toString());
+        assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 02 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: [#project, #cpsc210]}", task.toString());
 
     }
 
@@ -163,7 +163,6 @@ public class TestTask {
         task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
         assertFalse(task.equals(task2));
     }
-
 
 
 }

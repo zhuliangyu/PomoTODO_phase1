@@ -124,23 +124,29 @@ public class TestDueDate {
 
     @Test
     public void testIsDueWithinAWeek() {
-        DueDate dueDate1 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 7, 0, 0).getTime());
+        DueDate dueDate1 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 7, 0, 1).getTime());
 
-        dueDate1.nowDate = new GregorianCalendar(2019, 0, 7, 8, 50).getTime();
-
+        dueDate1.nowDate = new GregorianCalendar(2019, Calendar.JANUARY, 7, 10, 30).getTime();
         assertTrue(dueDate1.isDueWithinAWeek());
+
 
         DueDate dueDate2 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 13, 23, 59).getTime());
 
-        dueDate2.nowDate = new GregorianCalendar(2019, 0, 7, 8, 50).getTime();
+        dueDate2.nowDate = new GregorianCalendar(2019, 0, 7, 10, 30).getTime();
 
         assertTrue(dueDate2.isDueWithinAWeek());
 
-        DueDate dueDate3 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 24, 23, 59).getTime());
+        DueDate dueDate3 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 6, 23, 59).getTime());
 
-        dueDate3.nowDate = new GregorianCalendar(2019, 0, 7, 8, 50).getTime();
+        dueDate3.nowDate = new GregorianCalendar(2019, 0, 7, 10, 30).getTime();
 
         assertFalse(dueDate3.isDueWithinAWeek());
+
+        DueDate dueDate4 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 14, 0, 0).getTime());
+
+        dueDate4.nowDate = new GregorianCalendar(2019, 0, 7, 10, 30).getTime();
+
+        assertFalse(dueDate4.isDueWithinAWeek());
 
     }
 
@@ -149,6 +155,14 @@ public class TestDueDate {
         DueDate dueDate1 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime());
 
         assertEquals("Fri Jan 25 2019 10:30 AM", dueDate1.toString());
+
+        DueDate dueDate2 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 1, 10, 30).getTime());
+
+        assertEquals("Tue Jan 01 2019 10:30 AM", dueDate2.toString());
+
+        DueDate dueDate3 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 1, 1, 3).getTime());
+
+        assertEquals("Tue Jan 01 2019 01:03 AM", dueDate3.toString());
 
     }
 

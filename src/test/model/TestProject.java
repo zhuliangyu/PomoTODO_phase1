@@ -1,9 +1,11 @@
 package model;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,6 +103,17 @@ public class TestProject {
         assertEquals("test3", project.getTasks().get(3).getDescription());
         assertEquals("999", project.getTasks().get(1).getDescription());
 
+        Task task4 = new Task("test4");
+        List<Task> unmodifiedList = project.getTasks();
+
+
+        try {
+            unmodifiedList.add(task4);
+            fail("The return list is modified");
+        } catch (UnsupportedOperationException e) {
+
+        }
+        assertEquals(4, project.getTasks().size());
 
     }
 

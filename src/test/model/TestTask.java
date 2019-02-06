@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,17 @@ public class TestTask {
 
     @Test
     public void testConstructor() {
+
+
         assertEquals("test", task.getDescription());
+        //task is set to have no due date,
+        //status of 'To Do', and default priority level (i.e., not important nor urgent)
+
+        assertEquals("TODO",task.getStatus().toString());
+        assertEquals("DEFAULT",task.getPriority().toString());
+//        assertEquals("DEFAULT",task.getDueDate().toString());
+
+
     }
 
     @Test
@@ -65,6 +76,16 @@ public class TestTask {
         task.addTag("test1");
         assertEquals("[#test, #test1]", task.getTags().toString());
         assertEquals(2, task.getTags().size());
+
+        Set<Tag> unmodifiedSet = task.getTags();
+        try {
+            unmodifiedSet.add(new Tag("asdasd"));
+            fail("The return Set is modified");
+        } catch (UnsupportedOperationException e) {
+
+        }
+        assertEquals(2, unmodifiedSet.size());
+
     }
 
     @Test

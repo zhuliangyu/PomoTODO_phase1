@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +29,10 @@ public class Task {
         }
 
         setTagTask = new HashSet<Tag>();
+
+        dueDateTask = NO_DUE_DATE;
+        statusTask = Status.TODO;
+        priorityTask = new Priority();
     }
 
     // REQUIRES: name is non-empty
@@ -49,7 +54,7 @@ public class Task {
 
     // EFFECTS: returns an unmodifiable set of tags
     public Set<Tag> getTags() {
-        return this.setTagTask;
+        return Collections.unmodifiableSet(this.setTagTask);
     }
 
     // EFFECTS: returns the priority of this task

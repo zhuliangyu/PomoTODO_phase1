@@ -38,6 +38,10 @@ public class Priority {
                 urgent = true;
                 important = false;
                 break;
+            case 4:
+                urgent = false;
+                important = false;
+                break;
             default:
                 urgent = false;
                 important = false;

@@ -45,8 +45,9 @@ public class Project {
     public List<Task> getTasks() {
 
         List<Task> tasksList = new ArrayList<Task>(tasksInProject);
+        List<Task> unmodifiableList = Collections.unmodifiableList(tasksList);
 
-        return tasksList;
+        return unmodifiableList;
     }
 
     // EFFECTS: returns an integer between 0 and 100 which represents

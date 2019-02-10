@@ -9,9 +9,9 @@ public class Tag {
 
     // MODIFIES: this
     // EFFECTS: creates a Tag with the given name
-    // if name is empty, throw exception
+    // if name is empty, throw EmptyStringException
     public Tag(String name) throws EmptyStringException {
-        if (name.isEmpty()) {
+        if (name == null || name.isEmpty()) {
             throw new EmptyStringException();
         } else {
             this.name = name;

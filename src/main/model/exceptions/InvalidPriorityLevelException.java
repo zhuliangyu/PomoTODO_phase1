@@ -1,6 +1,6 @@
 package model.exceptions;
 
-public class InvalidPriorityLevelException extends IllegalArgumentException {
+public class InvalidPriorityLevelException extends Exception {
     public InvalidPriorityLevelException() {
     }
 

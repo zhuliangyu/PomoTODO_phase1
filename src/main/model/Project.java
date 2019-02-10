@@ -15,11 +15,9 @@ public class Project {
     // MODIFIES: this
     // EFFECTS: constructs a project with the given description
     //     the constructed project shall have no tasks.
-    // if description is non-empty, it will throw  EmptyStringException, NullArgumentException
-    public Project(String description) throws EmptyStringException, NullArgumentException {
-        if (description == null) {
-            throw new NullArgumentException("The string is Null!");
-        } else if (description.isEmpty()) {
+    // if description is empty, it will throw  EmptyStringException
+    public Project(String description) throws EmptyStringException {
+        if (description == null || description.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         }
 

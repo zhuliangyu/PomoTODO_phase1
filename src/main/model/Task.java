@@ -24,10 +24,8 @@ public class Task {
     //    If description does not contain meta-data, the task is set to have no due date,
     //    status of 'To Do', and default priority level (i.e., not important nor urgent)
     //    if description is non-empty, it will throw exception
-    public Task(String description) throws EmptyStringException, NullArgumentException {
-        if (description == null) {
-            throw new NullArgumentException("The string is Null!");
-        } else if (description.isEmpty()) {
+    public Task(String description) throws EmptyStringException {
+        if (description == null || description.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
             this.descriptionTask = description;
@@ -44,10 +42,8 @@ public class Task {
     // EFFECTS: creates a tag with name tagName and adds it to this task
     // Note: no two tags are to have the same name
     // if  name is non-empty, it will throw exception
-    public void addTag(String tagName) throws EmptyStringException, NullArgumentException {
-        if (tagName == null) {
-            throw new NullArgumentException("The string is Null!");
-        } else if (tagName.isEmpty()) {
+    public void addTag(String tagName) throws EmptyStringException {
+        if (tagName == null || tagName.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
             Tag tag = new Tag(tagName);
@@ -60,10 +56,8 @@ public class Task {
     // MODIFIES: this
     // EFFECTS: removes the tag with name tagName from this task
     // if name is non-empty, throw exception
-    public void removeTag(String tagName) throws EmptyStringException, NullArgumentException {
-        if (tagName == null) {
-            throw new NullArgumentException("The string is Null!");
-        } else if (tagName.isEmpty()) {
+    public void removeTag(String tagName) throws EmptyStringException {
+        if (tagName == null || tagName.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
             setTagTask.remove(new Tag(tagName));
@@ -116,9 +110,10 @@ public class Task {
     // MODIFIES: this
     // EFFECTS:  sets the description of this task
     //     parses the description to extract meta-data (i.e., tags, status, priority
-    //     and deadline). if description is empty, throw expcetion
+    //     and deadline).
+    //     if description is empty, throw expcetion
     public void setDescription(String description) throws EmptyStringException {
-        if (description.isEmpty()) {
+        if (description == null || description.isEmpty()) {
             throw new EmptyStringException();
         }
         this.descriptionTask = description;
@@ -139,10 +134,8 @@ public class Task {
 
     // EFFECTS: returns true if task contains a tag with tagName,
     //     returns false otherwise
-    public boolean containsTag(String tagName) throws EmptyStringException, NullArgumentException {
-        if (tagName == null) {
-            throw new NullArgumentException();
-        } else if (tagName == "") {
+    public boolean containsTag(String tagName) throws EmptyStringException {
+        if (tagName == null || tagName.isEmpty()) {
             throw new EmptyStringException();
         } else {
             return (setTagTask.contains(new Tag(tagName)));

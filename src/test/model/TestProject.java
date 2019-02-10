@@ -22,8 +22,6 @@ public class TestProject {
             project = new Project("test");
         } catch (EmptyStringException e) {
             e.printStackTrace();
-        } catch (NullArgumentException e) {
-            e.printStackTrace();
         }
 
     }
@@ -33,8 +31,6 @@ public class TestProject {
         try {
             project = new Project("test");
         } catch (EmptyStringException e) {
-            fail("It shouldn't throw exception.");
-        } catch (NullArgumentException e) {
             fail("It shouldn't throw exception.");
         }
         assertEquals("test", project.description);
@@ -47,17 +43,14 @@ public class TestProject {
             project = new Project("");
             fail("It didn't throw exception.");
         } catch (EmptyStringException e) {
-        } catch (NullArgumentException e) {
-            fail("It throw the wrong exception.");
         }
 
         try {
             project = new Project(null);
             fail("It didn't throw exception.");
         } catch (EmptyStringException e) {
-            fail("It throw the wrong exception.");
-        } catch (NullArgumentException e) {
         }
+
 
     }
 
@@ -73,8 +66,6 @@ public class TestProject {
             task3 = new Task("test3");
 
         } catch (EmptyStringException e) {
-            e.printStackTrace();
-        } catch (NullArgumentException e) {
             e.printStackTrace();
         }
 
@@ -97,6 +88,19 @@ public class TestProject {
 
     }
 
+    @Test
+    public void testAddTaskWitException() {
+
+
+        try {
+            project.add(null);
+            fail();
+        } catch (NullArgumentException e) {
+        }
+
+
+    }
+
     //
     @Test
     public void testAddTaskWithDueDate() {
@@ -107,11 +111,7 @@ public class TestProject {
             task = new Task("test");
             task2 = new Task("test");
             task3 = new Task("test");
-
-
         } catch (EmptyStringException e) {
-            e.printStackTrace();
-        } catch (NullArgumentException e) {
             e.printStackTrace();
         }
 
@@ -145,8 +145,6 @@ public class TestProject {
             task3 = new Task("test3");
 
         } catch (EmptyStringException e) {
-            fail();
-        } catch (NullArgumentException e) {
             fail();
         }
 
@@ -205,8 +203,6 @@ public class TestProject {
             task3 = new Task("test3");
         } catch (EmptyStringException e) {
             e.printStackTrace();
-        } catch (NullArgumentException e) {
-            e.printStackTrace();
         }
 
 
@@ -226,8 +222,6 @@ public class TestProject {
         try {
             task4 = new Task("test4");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
-        } catch (NullArgumentException e) {
             e.printStackTrace();
         }
 
@@ -253,8 +247,6 @@ public class TestProject {
             task = new Task("test");
         } catch (EmptyStringException e) {
             e.printStackTrace();
-        } catch (NullArgumentException e) {
-            e.printStackTrace();
         }
 
         try {
@@ -268,9 +260,8 @@ public class TestProject {
             task2 = new Task("test2");
         } catch (EmptyStringException e) {
             e.printStackTrace();
-        } catch (NullArgumentException e) {
-            e.printStackTrace();
         }
+
         try {
             task2.setStatus(Status.IN_PROGRESS);
         } catch (NullArgumentException e) {
@@ -281,9 +272,8 @@ public class TestProject {
             task3 = new Task("test3");
         } catch (EmptyStringException e) {
             e.printStackTrace();
-        } catch (NullArgumentException e) {
-            e.printStackTrace();
         }
+
 
         try {
             task3.setStatus(Status.DONE);
@@ -398,7 +388,6 @@ public class TestProject {
             e.printStackTrace();
         } catch (NullArgumentException e) {
             e.printStackTrace();
-
         }
 
         try {

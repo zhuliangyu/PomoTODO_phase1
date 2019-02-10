@@ -51,7 +51,6 @@ public class Priority {
             default:
                 urgent = false;
                 important = false;
-                break;
         }
 
     }

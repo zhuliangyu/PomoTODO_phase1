@@ -1,6 +1,6 @@
 package parsers.exceptions;
 
-public class ParsingException extends IllegalArgumentException {
+public class ParsingException extends Exception {
     public ParsingException() {
     }
 

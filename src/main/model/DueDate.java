@@ -190,13 +190,4 @@ public class DueDate {
     }
 
 
-    //Effect: convert date to String; Format: yyyymmdd
-//    private String dateTpYMD(Date date) {
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(myDueDate);
-//        String year = String.valueOf(cal.get(Calendar.YEAR));
-//        String month = String.valueOf(cal.get(Calendar.MONTH));
-//        String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-//        return year + month + day;
-//    }
 }

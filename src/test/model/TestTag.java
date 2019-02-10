@@ -35,6 +35,12 @@ public class TestTag {
         } catch (EmptyStringException e) {
         }
 
+        try {
+            tag = new Tag(null);
+            fail();
+        } catch (EmptyStringException e) {
+        }
+
     }
     @Test
     public void testToString() {

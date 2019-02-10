@@ -111,6 +111,41 @@ public class TestDueDate {
         }
     }
 
+    @Test
+    public void testSetDueDateNoException() {
+
+        Date newDate = new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime();
+
+//        DueDate dueDate1 = null;
+//        try {
+//            dueDate1 = new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime());
+//        } catch (NullArgumentException e) {
+//            e.printStackTrace();
+//        }
+
+        try {
+            dueDate.setDueDate(newDate);
+        } catch (NullArgumentException e) {
+            fail();
+        }
+        assertEquals(newDate, dueDate.getDate());
+
+    }
+
+    @Test
+    public void testSetDueDateWithException() {
+
+        Date newDate = null;
+
+        try {
+            dueDate.setDueDate(newDate);
+            fail();
+        } catch (NullArgumentException e) {
+        }
+
+
+    }
+
 
     @Test
     public void testPostponeOneDay() {
@@ -126,6 +161,8 @@ public class TestDueDate {
         assertEquals("Sat Jan 26 2019 10:30 AM", dueDate1.toString());
 
     }
+
+
 
     @Test
     public void testPostponeOneWeek() {

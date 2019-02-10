@@ -1,6 +1,6 @@
 package model.exceptions;
 
-public class InvalidTimeException extends Exception {
+public class InvalidTimeException extends IllegalArgumentException {
     public InvalidTimeException() {
     }
 

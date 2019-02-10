@@ -1,15 +1,21 @@
 package model;
 
+import model.exceptions.EmptyStringException;
+
 // Represents a tag having a name
 public class Tag {
 
     public String name;
 
-    // REQUIRES: name is non-empty
     // MODIFIES: this
     // EFFECTS: creates a Tag with the given name
-    public Tag(String name) {
-        this.name = name;
+    // if name is empty, throw exception
+    public Tag(String name) throws EmptyStringException {
+        if (name.isEmpty()) {
+            throw new EmptyStringException();
+        } else {
+            this.name = name;
+        }
 
     }
 
@@ -23,7 +29,6 @@ public class Tag {
     public String toString() {
         return "#" + name;
     }
-
 
 
     @Override

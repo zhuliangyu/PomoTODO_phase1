@@ -1,4 +1,5 @@
 package model;
+import model.exceptions.EmptyStringException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,12 +10,31 @@ public class TestTag {
 
     @BeforeEach
     public void runBefore() {
-        tag = new Tag("given");
+        try {
+            tag = new Tag("given");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testConstructor() {
+    public void testConstructorNoException() {
+        try {
+            tag = new Tag("given");
+        } catch (EmptyStringException e) {
+            fail();
+        }
         assertEquals("given", tag.getName());
+    }
+
+    @Test
+    public void testConstructorWithException() {
+        try {
+            tag = new Tag("");
+            fail();
+        } catch (EmptyStringException e) {
+        }
+
     }
     @Test
     public void testToString() {

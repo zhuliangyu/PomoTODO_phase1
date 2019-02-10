@@ -1,5 +1,8 @@
 package model;
 
+import model.exceptions.InvalidTimeException;
+import model.exceptions.NullArgumentException;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,52 +30,52 @@ public class DueDate {
 
     }
 
-    // REQUIRES: date != null
     // MODIFIES: this
     // EFFECTS: creates a DueDate with deadline of the given date
-    public DueDate(Date date) {
-        this.myDueDate = date;
+    // if date == null, return NullPointerException
+    public DueDate(Date date) throws NullArgumentException {
+        if (date == null) {
+            throw new NullArgumentException("DueDate class constructor Date is null");
+        } else {
+            this.myDueDate = date;
+        }
+
         this.nowDate = new Date();
-
-
     }
 
-    // REQUIRES: date != null
     // MODIFIES: this
     // EFFECTS: changes the due date to the given date
-    public void setDueDate(Date date) {
+    // if date == null, return NullPointerException
+    public void setDueDate(Date date) throws NullArgumentException {
+        if (date == null) {
+            throw new NullArgumentException("DueDate class setDueDate Date is null");
+        }
         myDueDate = date;
-
     }
 
-    // REQUIRES: 0 <= hh <= 23 && 0 <= mm <= 59
+
     // MODIFIES: this
     // EFFECTS: changes the due time to hh:mm leaving the month, day and year the same
-    public void setDueTime(int hh, int mm) {
-
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(this.getDate());
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR_OF_DAY, hh);
-        cal.set(Calendar.MINUTE, mm);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        myDueDate = cal.getTime();
-
+// if  input is not in the range of 0 <= hh <= 23 && 0 <= mm <= 59, it will throw InvalidTimeException
+    public void setDueTime(int hh, int mm) throws InvalidTimeException {
+        if (hh < 0 || hh > 24) {
+            throw new InvalidTimeException("DueDate class setDueTime hh is invalid");
+        }
+        if (mm < 0 || mm > 60) {
+            throw new InvalidTimeException("DueDate class setDueTime mm is invalid");
+        }
+        this.myDueDate = resetDate(getDate(), 0, hh, mm, 0, 0);
     }
 
     // MODIFIES: this
     // EFFECTS: postpones the due date by one day (leaving the time the same as
     //     in the original due date) based on the rules of the Gregorian calendar.
     public void postponeOneDay() {
-        this.setDueDate(postponeNdays(myDueDate, 1));
+        try {
+            this.setDueDate(postponeNdays(myDueDate, 1));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     // MODIFIES: this
@@ -80,11 +83,16 @@ public class DueDate {
     //     (leaving the time the same as in the original due date)
     //     based on the rules of the Gregorian calendar.
     public void postponeOneWeek() {
-//        this.setDueDate(postponeNdays(myDueDate, 7));
-        this.setDueDate(postponeNdays(myDueDate, 7));
+        try {
+            this.setDueDate(postponeNdays(myDueDate, 7));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
+
     private Date postponeNdays(Date myDate, int n) {
+        // it is a help method for personal usage
         Calendar c = Calendar.getInstance();
         c.setTime(myDate);
         c.add(Calendar.DATE, n);
@@ -106,12 +114,12 @@ public class DueDate {
 
     // EFFECTS: returns true if due date is at any time today, and false otherwise
     public boolean isDueToday() {
-
         return compareDate(nowDate, myDueDate);
     }
 
-    // EFFECTS: returns true if two dates are the same at year month and day, and false otherwise
     private boolean compareDate(Date newDate, Date myDueDate) {
+        // EFFECTS: returns true if two dates are the same at year month and day, and false otherwise
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String stringNowDate = formatter.format(newDate);
         String stringDueDate = formatter.format(myDueDate);
@@ -131,6 +139,7 @@ public class DueDate {
     public boolean isDueWithinAWeek() {
         Calendar cal = Calendar.getInstance();
 
+        //if today is Jan 7, it will reset the date to Jan 13 (a week after) 00:00:00
         Date nowAfterOneWeek;
         nowAfterOneWeek = resetDate(nowDate, 7,
                 cal.getMinimum(Calendar.HOUR_OF_DAY),
@@ -138,26 +147,9 @@ public class DueDate {
                 cal.getMinimum(Calendar.SECOND),
                 cal.getMinimum(Calendar.MILLISECOND));
 
-//        cal.setTime(nowAfterOneWeek);
-//        int year = cal.get(Calendar.YEAR);
-//        int month = cal.get(Calendar.MONTH);
-//        int day = cal.get(Calendar.DAY_OF_MONTH);
-//        cal.set(Calendar.YEAR, year);
-//        cal.set(Calendar.MONTH, month);
-//        cal.set(Calendar.DATE, day);
-//        cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
-//        cal.set(Calendar.MINUTE,      cal.getMinimum(Calendar.MINUTE));
-//        cal.set(Calendar.SECOND,      cal.getMinimum(Calendar.SECOND));
-//        cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
-//        nowAfterOneWeek = cal.getTime();
 
-
+        //if today is Jan 7, it will reset the date to Jan 6(oen day before) 23:59:59
         Date nowTruncated;
-
-//        cal2.set(Calendar.HOUR_OF_DAY, cal2.getMaximum(Calendar.HOUR_OF_DAY));
-//        cal2.set(Calendar.MINUTE,      cal2.getMaximum(Calendar.MINUTE));
-//        cal2.set(Calendar.SECOND,      cal2.getMaximum(Calendar.SECOND));
-//        cal2.set(Calendar.MILLISECOND, cal2.getMaximum(Calendar.MILLISECOND));
         nowTruncated = resetDate(nowDate, -1,
                 cal.getMaximum(Calendar.HOUR_OF_DAY),
                 cal.getMaximum(Calendar.MINUTE),
@@ -167,10 +159,11 @@ public class DueDate {
         return (myDueDate.before(nowAfterOneWeek) && myDueDate.after(nowTruncated));
     }
 
-    private Date resetDate(Date nowDate, int days, int hour, int min, int sec, int millSec) {
+    private Date resetDate(Date nowDate, int postponeDays, int hour, int min, int sec, int millSec) {
+        //reset the date according to input of days hour min sec and millsec
         Date nowTruncated;
         Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(postponeNdays(nowDate, days));
+        cal2.setTime(postponeNdays(nowDate, postponeDays));
         int year2 = cal2.get(Calendar.YEAR);
         int month2 = cal2.get(Calendar.MONTH);
         int day2 = cal2.get(Calendar.DAY_OF_MONTH);

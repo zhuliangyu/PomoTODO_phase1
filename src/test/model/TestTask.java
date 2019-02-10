@@ -1,5 +1,8 @@
 package model;
 
+import model.exceptions.EmptyStringException;
+import model.exceptions.InvalidPriorityLevelException;
+import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,63 +20,152 @@ public class TestTask {
 
     @BeforeEach
     public void runBefore() {
-        task = new Task("test");
+        try {
+            task = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testConstructor() {
-
-
+    public void testConstructorWithoutException() {
+        try {
+            task = new Task("test");
+        } catch (EmptyStringException e) {
+            fail("it shouldn't throw exception");
+        } catch (NullArgumentException e) {
+            fail("it shouldn't throw exception");
+        }
         assertEquals("test", task.getDescription());
         //task is set to have no due date,
         //status of 'To Do', and default priority level (i.e., not important nor urgent)
 
-        assertEquals("TODO",task.getStatus().toString());
-        assertEquals("DEFAULT",task.getPriority().toString());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
 //        assertEquals("DEFAULT",task.getDueDate().toString());
 
 
     }
 
     @Test
-    public void testConstructorNull() {
+    public void testConstructorWithException() {
+        try {
+            task = new Task(null);
+            fail("it didn't throw exception");
+        } catch (EmptyStringException e) {
+            fail("it shouldn't throw exception");
+        } catch (NullArgumentException e) {
+        }
 
-        Task task2 = new Task(null);
+        try {
+            task = new Task("");
+            fail("it didn't throw exception");
+        } catch (EmptyStringException e) {
+        } catch (NullArgumentException e) {
+            fail("it shouldn't throw exception");
 
-        assertEquals("", task2.getDescription());
+        }
+    }
+
+
+    @Test
+    public void testAddTagNoException() {
+
+        try {
+            task.addTag("test");
+            task.addTag("test");
+            assertEquals("[#test]", task.getTags().toString());
+            task.addTag("test1");
+            assertEquals("[#test, #test1]", task.getTags().toString());
+        } catch (EmptyStringException e) {
+            fail("It should be excepton here");
+        } catch (NullArgumentException e) {
+            fail("It should be excepton here");
+        }
+
     }
 
     @Test
-    public void testAddTag() {
+    public void testAddTagWithException() {
+        try {
+            task.addTag("");
+            fail("No exception throw");
+        } catch (EmptyStringException e) {
 
-        task.addTag("test");
-        task.addTag("test");
-        assertEquals("[#test]", task.getTags().toString());
+        } catch (NullArgumentException e) {
+            fail("You should throw exception.");
+        }
 
-        task.addTag("test1");
-        assertEquals("[#test, #test1]", task.getTags().toString());
+        try {
+            task.addTag(null);
+            fail("No exception throw");
+        } catch (EmptyStringException e) {
+            fail("You should throw exception.");
+        } catch (NullArgumentException e) {
+        }
 
     }
 
+
     @Test
-    public void testRemoveTag() {
+    public void testRemoveTagNoException() {
 
-        task.addTag("test");
-        task.addTag("test1");
-        assertEquals("[#test, #test1]", task.getTags().toString());
+        try {
+            task.addTag("test");
+            task.addTag("test1");
+            assertEquals("[#test, #test1]", task.getTags().toString());
 
-        task.removeTag("test");
-        assertEquals("[#test1]", task.getTags().toString());
+            task.removeTag("test");
+            assertEquals("[#test1]", task.getTags().toString());
 
-        task.removeTag("te");
-        assertEquals("[#test1]", task.getTags().toString());
+            task.removeTag("te");
+            assertEquals("[#test1]", task.getTags().toString());
+        } catch (EmptyStringException e) {
+            fail("It should be exception here");
+        } catch (NullArgumentException e) {
+            fail("It should be exception here");
+        }
+    }
+
+    @Test
+    public void testRemoveTagWithException() {
+        try {
+            task.removeTag("");
+            fail("No exception throw");
+        } catch (EmptyStringException e) {
+
+        } catch (NullArgumentException e) {
+            fail("You should throw exception.");
+        }
+
+        try {
+            task.removeTag(null);
+            fail("No exception throw");
+        } catch (EmptyStringException e) {
+            fail("You should throw exception.");
+        } catch (NullArgumentException e) {
+        }
 
     }
 
     @Test
     public void testGetTags() {
-        task.addTag("test");
-        task.addTag("test1");
+        try {
+            task.addTag("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.addTag("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertEquals("[#test, #test1]", task.getTags().toString());
         assertEquals(2, task.getTags().size());
 
@@ -81,7 +173,7 @@ public class TestTask {
         try {
             unmodifiedSet.add(new Tag("asdasd"));
             fail("The return Set is modified");
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedOperationException | EmptyStringException e) {
 
         }
         assertEquals(2, unmodifiedSet.size());
@@ -89,18 +181,59 @@ public class TestTask {
     }
 
     @Test
-    public void testSetPriority() {
-        task.addTag("test");
-        task.addTag("test1");
-        task.setPriority(new Priority(1));
+    public void testSetPriorityNoException() {
+        try {
+            task.addTag("test");
+            task.addTag("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            task.setPriority(new Priority(1));
+        } catch (NullArgumentException | InvalidPriorityLevelException e) {
+            fail();
+        }
+
         assertEquals("IMPORTANT & URGENT", task.getPriority().toString());
     }
 
     @Test
+    public void testSetPriorityWithException() {
+        try {
+            task.addTag("test");
+            task.addTag("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            task.setPriority(null);
+            fail();
+        } catch (NullArgumentException e) {
+        }
+    }
+
+    @Test
     public void testGetStatus() {
-        task.addTag("test");
-        task.addTag("test1");
-        task.setStatus(Status.IN_PROGRESS);
+        try {
+            task.addTag("test");
+            task.addTag("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            task.setStatus(Status.IN_PROGRESS);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertEquals("IN PROGRESS", task.getStatus().toString());
     }
 
@@ -108,41 +241,145 @@ public class TestTask {
     @Test
     public void testGetSetDescription() {
 
-        task.setDescription("test");
+        try {
+            task.setDescription("test");
+        } catch (EmptyStringException e) {
+            fail();
+        }
         assertEquals("test", task.getDescription());
+    }
+
+    @Test
+    public void testGetSetDescriptionWithException() {
+
+        try {
+            task.setDescription("");
+            fail();
+        } catch (EmptyStringException e) {
+        }
     }
 
     @Test
     public void testGetSetDueDate() {
 
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertEquals("Fri Jan 25 2019 10:30 AM", task.getDueDate().toString());
     }
 
 
     @Test
-    public void testContainsTag() {
-
-        task.addTag("test");
-        task.addTag("test1");
+    public void testContainsTagNoException() {
+        try {
+            task.addTag("test");
+            task.addTag("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertEquals("[#test, #test1]", task.getTags().toString());
 
+        try {
+            assertEquals(true, task.containsTag("test"));
+            assertEquals(true, task.containsTag("test1"));
+            assertEquals(false, task.containsTag("test2"));
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (NullArgumentException e) {
+            fail();
+        }
 
-        assertEquals(true, task.containsTag("test"));
-        assertEquals(true, task.containsTag("test1"));
-        assertEquals(false, task.containsTag("test2"));
+    }
+
+    @Test
+    public void testContainsTagWithException() {
+        try {
+            task.addTag("test");
+            task.addTag("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        assertEquals("[#test, #test1]", task.getTags().toString());
+
+        try {
+            assertEquals(true, task.containsTag(""));
+            fail();
+        } catch (EmptyStringException e) {
+        } catch (NullArgumentException e) {
+            fail();
+        }
+        try {
+            assertEquals(true, task.containsTag(null));
+            fail();
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (NullArgumentException e) {
+        }
+
+    }
+
+    @Test
+    public void testSetStatusNoException(){
+        try {
+            task.setStatus(Status.IN_PROGRESS);
+        } catch (NullArgumentException e) {
+            fail();
+        }
+
+        assertEquals(Status.IN_PROGRESS.toString(), task.getStatus().toString());
+    }
+
+    @Test
+    public void testSetStatusWithException(){
+        try {
+            task.setStatus(null);
+            fail();
+        } catch (NullArgumentException e) {
+
+        }
 
     }
 
     @Test
     public void testToString() {
 
-        task.setDescription("Read collaboration policy of the term project");
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.FEBRUARY, 2, 11, 59).getTime()));
-        task.setStatus(Status.IN_PROGRESS);
-        task.setPriority(new Priority(1));
-        task.addTag("cpsc210");
-        task.addTag("project");
+        try {
+            task.setDescription("Read collaboration policy of the term project");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.FEBRUARY, 2, 11, 59).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setStatus(Status.IN_PROGRESS);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setPriority(new Priority(1));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        } catch (InvalidPriorityLevelException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.addTag("cpsc210");
+            task.addTag("project");
+
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
 
         assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 02 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: [#project, #cpsc210]}", task.toString());
 
@@ -150,40 +387,130 @@ public class TestTask {
 
     @Test
     public void testEqualsSameDescriptionDifferentDueDay() {
-        Task task = new Task("test");
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
-        Task task2 = new Task("test");
-        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        Task task = null;
+        try {
+            task = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+
+        Task task2 = null;
+        try {
+            task2 = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertFalse(task.equals(task2));
     }
 
     @Test
     public void testEqualsSameDescriptionSameDueDay() {
-        Task task = new Task("test");
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
-        Task task2 = new Task("test");
-        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        Task task = null;
+        try {
+            task = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        Task task2 = null;
+        try {
+            task2 = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertTrue(task.equals(task2));
     }
 
     @Test
     public void testEqualsDiffDescriptionDiffDueDay() {
-        Task task = new Task("test1");
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
-        Task task2 = new Task("test");
-        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        Task task = null;
+        try {
+            task = new Task("test1");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        Task task2 = null;
+        try {
+            task2 = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertFalse(task.equals(task2));
     }
 
-
+//
     @Test
     public void testEqualsDiffDescriptionSameDueDay() {
-        Task task = new Task("test");
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
-        Task task2 = new Task("test2");
-        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        Task task = null;
+        try {
+            task = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        Task task2 = null;
+        try {
+            task2 = new Task("test2");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertFalse(task.equals(task2));
     }
-
-
+//
+//
 }

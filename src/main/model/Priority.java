@@ -1,5 +1,7 @@
 package model;
 
+import model.exceptions.InvalidPriorityLevelException;
+
 // To model priority of a task according to the Eisenhower Matrix
 //     https://en.wikipedia.org/wiki/Time_management#The_Eisenhower_Method
 public class Priority {
@@ -17,14 +19,18 @@ public class Priority {
     public Priority() {
         this.important = false;
         this.urgent = false;
-
     }
 
-    // REQUIRES: 1 <= quadrant <= 4
     // MODIFIES: this
     // EFFECTS: constructs a Priority according to the value of "quadrant"
     //     the parameter "quadrant" refers to the quadrants of the Eisenhower Matrix
-    public Priority(int quadrant) {
+    // if number is not in the range of 1 <= quadrant <= 4, it will throw exception
+    public Priority(int quadrant) throws InvalidPriorityLevelException {
+
+        if (quadrant > 4 || quadrant < 1) {
+            throw new InvalidPriorityLevelException("Priority set is invalid");
+        }
+
         switch (quadrant) {
             case 1:
                 urgent = true;

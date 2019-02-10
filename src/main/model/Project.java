@@ -1,5 +1,8 @@
 package model;
 
+import model.exceptions.EmptyStringException;
+import model.exceptions.NullArgumentException;
+
 import java.util.*;
 
 // Represents a Project, a collection of zero or more Tasks
@@ -9,31 +12,44 @@ public class Project {
     protected String description;
 
 
-    // REQUIRES: description is non-empty
     // MODIFIES: this
     // EFFECTS: constructs a project with the given description
     //     the constructed project shall have no tasks.
-    public Project(String description) {
+    // if description is non-empty, it will throw  EmptyStringException, NullArgumentException
+    public Project(String description) throws EmptyStringException, NullArgumentException {
+        if (description == null) {
+            throw new NullArgumentException("The string is Null!");
+        } else if (description.isEmpty()) {
+            throw new EmptyStringException("The string is empty.");
+        }
+
+
         this.description = description;
-//        this.tasksInProject = new HashSet<Task>();
         this.tasksInProject = new LinkedHashSet<>();
     }
 
-    // REQUIRES: task != null
     // MODIFIES: this
     // EFFECTS: task is added to this project (if it was not already part of it)
-    public void add(Task task) {
-        tasksInProject.add(task);
+    // if task = null, throw exception
+    public void add(Task task) throws NullArgumentException {
+        if (task == null) {
+            throw new NullArgumentException();
+        } else {
+            tasksInProject.add(task);
+        }
 
 
     }
 
-    // REQUIRES: task != null
     // MODIFIES: this
     // EFFECTS: removes task from this project
-    public void remove(Task task) {
-        tasksInProject.remove(task);
-
+    // if task = null, throw exception
+    public void remove(Task task) throws NullArgumentException {
+        if (task == null) {
+            throw new NullArgumentException();
+        } else {
+            tasksInProject.remove(task);
+        }
     }
 
     // EFFECTS: returns the description of this project
@@ -92,9 +108,12 @@ public class Project {
         }
     }
 
-    // REQUIRES: task != null
     // EFFECTS: returns true if this project contains the task
-    public boolean contains(Task task) {
+    // IF task = null, it will throw exception
+    public boolean contains(Task task) throws NullArgumentException {
+        if (task == null) {
+            throw new NullArgumentException();
+        }
         return tasksInProject.contains(task);
     }
 

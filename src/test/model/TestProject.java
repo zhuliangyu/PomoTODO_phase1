@@ -1,5 +1,7 @@
 package model;
 
+import model.exceptions.EmptyStringException;
+import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,69 +18,169 @@ public class TestProject {
 
     @BeforeEach
     public void runBefore() {
-        project = new Project("test");
+        try {
+            project = new Project("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Test
-    public void testConstructor() {
+    public void testConstructorWithoutException() {
+        try {
+            project = new Project("test");
+        } catch (EmptyStringException e) {
+            fail("It shouldn't throw exception.");
+        } catch (NullArgumentException e) {
+            fail("It shouldn't throw exception.");
+        }
         assertEquals("test", project.description);
         assertEquals(0, project.getTasks().size());
     }
 
     @Test
-    public void testAddTaskWithoutDueDate() {
-        Task task = new Task("test");
-        Task task2 = new Task("test");
+    public void testConstructorWithException() {
+        try {
+            project = new Project("");
+            fail("It didn't throw exception.");
+        } catch (EmptyStringException e) {
+        } catch (NullArgumentException e) {
+            fail("It throw the wrong exception.");
+        }
 
-        project.add(task);
-        project.add(task2);
+        try {
+            project = new Project(null);
+            fail("It didn't throw exception.");
+        } catch (EmptyStringException e) {
+            fail("It throw the wrong exception.");
+        } catch (NullArgumentException e) {
+        }
+
+    }
+
+    @Test
+    public void testAddTaskWithoutDueDateNoException() {
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+
+        try {
+            task = new Task("test");
+            task2 = new Task("test");
+            task3 = new Task("test3");
+
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+        } catch (NullArgumentException e) {
+            fail();
+        }
 
         assertEquals(1, project.getTasks().size());
 
-        Task task3 = new Task("test3");
-        project.add(task3);
+        try {
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            fail();
+
+        }
         assertEquals(2, project.getTasks().size());
 
     }
 
+    //
     @Test
     public void testAddTaskWithDueDate() {
-        Task task = new Task("test");
-        task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
-        Task task2 = new Task("test");
-        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task2 = new Task("test");
+            task3 = new Task("test");
 
-        project.add(task);
-        project.add(task2);
 
-        Task task3 = new Task("test");
-        task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            task.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 25, 10, 30).getTime()));
+            task2.setDueDate(new DueDate(new GregorianCalendar(2019, Calendar.JANUARY, 26, 10, 30).getTime()));
+
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
 
         assertEquals(2, project.getTasks().size());
+    }
 
-//        Task task3 = new Task("test3");
-//        project.add(task3);
-//        assertEquals(2, project.getTasks().size());
+    //
+    @Test
+    public void testRemoveTaskNoException() {
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task2 = new Task("test");
+            task3 = new Task("test3");
 
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (NullArgumentException e) {
+            fail();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+        } catch (NullArgumentException e) {
+            fail();
+        }
+
+        assertEquals(1, project.getTasks().size());
+
+        try {
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            fail();
+        }
+        assertEquals(2, project.getTasks().size());
+
+        try {
+            project.remove(task3);
+        } catch (NullArgumentException e) {
+            fail();
+        }
+        assertEquals(1, project.getTasks().size());
     }
 
     @Test
-    public void testRemoveTask() {
-        Task task = new Task("test");
-        Task task2 = new Task("test");
-
-        project.add(task);
-        project.add(task2);
-
-        assertEquals(1, project.getTasks().size());
-
-        Task task3 = new Task("test3");
-        project.add(task3);
-        assertEquals(2, project.getTasks().size());
-
-        project.remove(task3);
-        assertEquals(1, project.getTasks().size());
+    public void testRemoveTaskWithException() {
+        try {
+            project.remove(null);
+            fail();
+        } catch (NullArgumentException e) {
+        }
     }
 
     @Test
@@ -88,22 +190,47 @@ public class TestProject {
 
     }
 
+    //
     @Test
     public void testGetTasks() {
-        Task task = new Task("test");
-        Task task999 = new Task("999");
-        Task task2 = new Task("test2");
-        Task task3 = new Task("test3");
+        Task task = null;
+        Task task999 = null;
+        Task task2 = null;
+        Task task3 = null;
 
-        project.add(task);
-        project.add(task999);
-        project.add(task2);
-        project.add(task3);
+        try {
+            task = new Task("test");
+            task999 = new Task("999");
+            task2 = new Task("test2");
+            task3 = new Task("test3");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            project.add(task);
+            project.add(task999);
+            project.add(task2);
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
         assertEquals(4, project.getTasks().size());
         assertEquals("test3", project.getTasks().get(3).getDescription());
         assertEquals("999", project.getTasks().get(1).getDescription());
 
-        Task task4 = new Task("test4");
+        Task task4 = null;
+        try {
+            task4 = new Task("test4");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         List<Task> unmodifiedList = project.getTasks();
 
 
@@ -113,49 +240,113 @@ public class TestProject {
         } catch (UnsupportedOperationException e) {
 
         }
+
         assertEquals(4, project.getTasks().size());
 
     }
 
+    //
     @Test
     public void testGetProgressFraction() {
-        Task task = new Task("test");
-        task.setStatus(Status.IN_PROGRESS);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.IN_PROGRESS);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        project.add(task);
-        project.add(task2);
-        project.add(task3);
+        Task task = null;
+        try {
+            task = new Task("test");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            task.setStatus(Status.IN_PROGRESS);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        Task task2 = null;
+        try {
+            task2 = new Task("test2");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        try {
+            task2.setStatus(Status.IN_PROGRESS);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+        Task task3 = null;
+        try {
+            task3 = new Task("test3");
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            task3.setStatus(Status.DONE);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(33, project.getProgress());
 
     }
 
     @Test
     public void testGetProgressFractionDown() {
-        Task task = new Task("test");
-        task.setStatus(Status.IN_PROGRESS);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.IN_PROGRESS);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        Task task4 = new Task("test4");
-        task4.setStatus(Status.IN_PROGRESS);
-        Task task5 = new Task("test5");
-        task5.setStatus(Status.IN_PROGRESS);
-        Task task6 = new Task("test6");
-        task6.setStatus(Status.IN_PROGRESS);
-        project.add(task);
-        project.add(task2);
-        project.add(task3);
-        project.add(task4);
-        project.add(task5);
-        project.add(task6);
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        Task task4 = null;
+        Task task5 = null;
+        Task task6 = null;
+
+        try {
+            task = new Task("test");
+            task.setStatus(Status.IN_PROGRESS);
+            task2 = new Task("test2");
+            task2.setStatus(Status.IN_PROGRESS);
+            task3 = new Task("test3");
+            task3.setStatus(Status.DONE);
+            task4 = new Task("test4");
+            task4.setStatus(Status.IN_PROGRESS);
+            task5 = new Task("test5");
+            task5.setStatus(Status.IN_PROGRESS);
+            task6 = new Task("test6");
+            task6.setStatus(Status.IN_PROGRESS);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+            project.add(task3);
+            project.add(task4);
+            project.add(task5);
+            project.add(task6);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(16, project.getProgress());
 
     }
 
+    //
     @Test
     public void testGetProgressNoTask() {
         assertEquals(100, project.getProgress());
@@ -163,60 +354,121 @@ public class TestProject {
 
     @Test
     public void testGetProgressAllDone() {
-        Task task = new Task("test");
-        task.setStatus(Status.DONE);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.DONE);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        project.add(task);
-        project.add(task2);
-        project.add(task3);
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task.setStatus(Status.DONE);
+            task2 = new Task("test2");
+            task2.setStatus(Status.DONE);
+            task3 = new Task("test3");
+            task3.setStatus(Status.DONE);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(100, project.getProgress());
 
     }
 
     @Test
     public void testGetNumberOfTasks() {
-        Task task = new Task("test");
-        task.setStatus(Status.DONE);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.DONE);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        project.add(task);
-        project.add(task2);
-        project.add(task3);
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task.setStatus(Status.DONE);
+            task2 = new Task("test2");
+            task2.setStatus(Status.DONE);
+            task3 = new Task("test3");
+            task3.setStatus(Status.DONE);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(3, project.getNumberOfTasks());
 
     }
 
     @Test
     public void testIsCompletedTrue() {
-        Task task = new Task("test");
-        task.setStatus(Status.DONE);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.DONE);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        project.add(task);
-        project.add(task2);
-        project.add(task3);
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task.setStatus(Status.DONE);
+            task2 = new Task("test2");
+            task2.setStatus(Status.DONE);
+            task3 = new Task("test3");
+            task3.setStatus(Status.DONE);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(true, project.isCompleted());
 
     }
 
     @Test
     public void testIsCompletedFalse() {
-        Task task = new Task("test");
-        task.setStatus(Status.IN_PROGRESS);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.DONE);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        project.add(task);
-        project.add(task2);
-        project.add(task3);
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task.setStatus(Status.IN_PROGRESS);
+            task2 = new Task("test2");
+            task2.setStatus(Status.DONE);
+            task3 = new Task("test3");
+            task3.setStatus(Status.DONE);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+            project.add(task3);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
         assertEquals(false, project.isCompleted());
 
     }
@@ -229,19 +481,48 @@ public class TestProject {
     }
 
     @Test
-    public void testContains() {
-        Task task = new Task("test");
-        task.setStatus(Status.IN_PROGRESS);
-        Task task2 = new Task("test2");
-        task2.setStatus(Status.DONE);
-        Task task3 = new Task("test3");
-        task3.setStatus(Status.DONE);
-        project.add(task);
-        project.add(task2);
-//        project.add(task3);
-        assertEquals(true, project.contains(task));
-        assertEquals(true, project.contains(task2));
-        assertEquals(false, project.contains(task3));
+    public void testContainsNoException() {
+        Task task = null;
+        Task task2 = null;
+        Task task3 = null;
+        try {
+            task = new Task("test");
+            task.setStatus(Status.IN_PROGRESS);
+            task2 = new Task("test2");
+            task2.setStatus(Status.DONE);
+            task3 = new Task("test3");
+            task3.setStatus(Status.DONE);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            project.add(task);
+            project.add(task2);
+        } catch (NullArgumentException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            assertEquals(true, project.contains(task));
+            assertEquals(true, project.contains(task2));
+            assertEquals(false, project.contains(task3));
+        } catch (NullArgumentException e) {
+            fail();
+        }
+
+    }
+
+    @Test
+    public void testContainsWithException() {
+
+        try {
+            assertEquals(true, project.contains(null));
+            fail();
+        } catch (NullArgumentException e) {
+        }
 
     }
 }

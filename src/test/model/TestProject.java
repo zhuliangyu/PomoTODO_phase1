@@ -61,9 +61,8 @@ public class TestProject {
         Task task3 = null;
 
         try {
-            task = new Task("test");
-            task2 = new Task("test");
-            task3 = new Task("test3");
+            task = new Task();
+            task2 = new Task();
 
         } catch (EmptyStringException e) {
             e.printStackTrace();
@@ -78,13 +77,6 @@ public class TestProject {
 
         assertEquals(1, project.getTasks().size());
 
-        try {
-            project.add(task3);
-        } catch (NullArgumentException e) {
-            fail();
-
-        }
-        assertEquals(2, project.getTasks().size());
 
     }
 
@@ -108,9 +100,9 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
-            task2 = new Task("test");
-            task3 = new Task("test");
+            task = new Task();
+            task2 = new Task();
+            task3 = new Task();
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
@@ -140,9 +132,9 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
-            task2 = new Task("test");
-            task3 = new Task("test3");
+            task = new Task("test##");
+            task2 = new Task("test##");
+            task3 = new Task("test3##");
 
         } catch (EmptyStringException e) {
             fail();
@@ -197,10 +189,10 @@ public class TestProject {
         Task task3 = null;
 
         try {
-            task = new Task("test");
-            task999 = new Task("999");
-            task2 = new Task("test2");
-            task3 = new Task("test3");
+            task = new Task("test##");
+            task999 = new Task("999##");
+            task2 = new Task("test2##");
+            task3 = new Task("test3##");
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
@@ -244,7 +236,7 @@ public class TestProject {
     public void testGetProgressFraction() {
         Task task = null;
         try {
-            task = new Task("test");
+            task = new Task("test##");
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
@@ -257,7 +249,7 @@ public class TestProject {
 
         Task task2 = null;
         try {
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
@@ -269,7 +261,7 @@ public class TestProject {
         }
         Task task3 = null;
         try {
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
@@ -303,17 +295,17 @@ public class TestProject {
         Task task6 = null;
 
         try {
-            task = new Task("test");
+            task = new Task("test##");
             task.setStatus(Status.IN_PROGRESS);
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
             task2.setStatus(Status.IN_PROGRESS);
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
-            task4 = new Task("test4");
+            task4 = new Task("test4##");
             task4.setStatus(Status.IN_PROGRESS);
-            task5 = new Task("test5");
+            task5 = new Task("test5##");
             task5.setStatus(Status.IN_PROGRESS);
-            task6 = new Task("test6");
+            task6 = new Task("test6##");
             task6.setStatus(Status.IN_PROGRESS);
         } catch (EmptyStringException e) {
             e.printStackTrace();
@@ -378,11 +370,11 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
+            task = new Task("test##");
             task.setStatus(Status.DONE);
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
             task2.setStatus(Status.DONE);
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
             e.printStackTrace();
@@ -408,11 +400,11 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
+            task = new Task("test##");
             task.setStatus(Status.DONE);
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
             task2.setStatus(Status.DONE);
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
             e.printStackTrace();
@@ -438,11 +430,11 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
+            task = new Task("test##");
             task.setStatus(Status.IN_PROGRESS);
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
             task2.setStatus(Status.DONE);
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
             e.printStackTrace();
@@ -475,11 +467,11 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
+            task = new Task("test##");
             task.setStatus(Status.IN_PROGRESS);
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
             task2.setStatus(Status.DONE);
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
             e.printStackTrace();

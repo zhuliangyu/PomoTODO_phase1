@@ -2,6 +2,8 @@ package model;
 
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
+import parsers.TagParser;
+import parsers.exceptions.ParsingException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,18 +27,47 @@ public class Task {
     //    status of 'To Do', and default priority level (i.e., not important nor urgent)
     //    if description is non-empty, it will throw exception
     public Task(String description) throws EmptyStringException {
+        setTagTask = new HashSet<Tag>();
+
         if (description == null || description.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
-            this.descriptionTask = description;
+//            this.descriptionTask = description;
+            Task tk = new Task();
+            TagParser tp = new TagParser();
+            try {
+                tp.parse(description, tk);
+            } catch (ParsingException e) {
+                //    If description does not contain meta-data, the task is set to have no due date,
+                //    status of 'To Do', and default priority level (i.e., not important nor urgent)
+                //    if description is non-empty, it will throw exception
+                e.printStackTrace();
+                dueDateTask = NO_DUE_DATE;
+                statusTask = Status.TODO;
+                priorityTask = new Priority();
+            }
+
+            this.setDescription(tk.descriptionTask);
+            this.setDueDate(tk.dueDateTask);
+            this.setStatus(tk.statusTask);
+            this.setPriority(tk.priorityTask);
+            for (Tag tag :
+                    tk.getTags()) {
+                this.addTag(tag.getName());
+            }
         }
 
-        setTagTask = new HashSet<Tag>();
 
+    }
+
+    public Task() {
+        descriptionTask = "";
+        setTagTask = new HashSet<Tag>();
         dueDateTask = NO_DUE_DATE;
         statusTask = Status.TODO;
         priorityTask = new Priority();
     }
+
 
     // MODIFIES: this
     // EFFECTS: creates a tag with name tagName and adds it to this task
@@ -111,7 +142,7 @@ public class Task {
     // EFFECTS:  sets the description of this task
     //     parses the description to extract meta-data (i.e., tags, status, priority
     //     and deadline).
-    //     if description is empty, throw expcetion
+    //     if description is empty, throw exception
     public void setDescription(String description) throws EmptyStringException {
         if (description == null || description.isEmpty()) {
             throw new EmptyStringException();
@@ -128,6 +159,10 @@ public class Task {
     // MODIFIES: this
     // EFFECTS: sets the due date of this task
     public void setDueDate(DueDate dueDate) {
+
+        if (dueDate == null) {
+            this.dueDateTask = NO_DUE_DATE;
+        }
 
         this.dueDateTask = dueDate;
     }

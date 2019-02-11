@@ -58,10 +58,10 @@ public class DueDate {
     // EFFECTS: changes the due time to hh:mm leaving the month, day and year the same
 // if  input is not in the range of 0 <= hh <= 23 && 0 <= mm <= 59, it will throw InvalidTimeException
     public void setDueTime(int hh, int mm) throws InvalidTimeException {
-        if (hh < 0 || hh > 24) {
+        if (hh < 0 || hh > 23) {
             throw new InvalidTimeException("DueDate class setDueTime hh is invalid");
         }
-        if (mm < 0 || mm > 60) {
+        if (mm < 0 || mm > 59) {
             throw new InvalidTimeException("DueDate class setDueTime mm is invalid");
         }
         this.myDueDate = resetDate(getDate(), 0, hh, mm, 0, 0);
@@ -91,7 +91,7 @@ public class DueDate {
     }
 
 
-    private Date postponeNdays(Date myDate, int n) {
+    public Date postponeNdays(Date myDate, int n) {
         // it is a help method for personal usage
         Calendar c = Calendar.getInstance();
         c.setTime(myDate);

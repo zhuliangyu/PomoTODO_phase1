@@ -5,6 +5,7 @@ import model.exceptions.InvalidPriorityLevelException;
 import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import parsers.exceptions.ParsingException;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,7 +22,7 @@ public class TestTask {
     @BeforeEach
     public void runBefore() {
         try {
-            task = new Task();
+            task = new Task("test");
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
@@ -33,8 +34,10 @@ public class TestTask {
             task = new Task("test ## tomorrow; tag4; tag5; tomorrow");
         } catch (EmptyStringException e) {
             fail("it shouldn't throw exception");
+        } catch (Exception e) {
+            fail();
         }
-        assertEquals("test", task.getDescription());
+        assertEquals("test ", task.getDescription());
         //task is set to have no due date,
         //status of 'To Do', and default priority level (i.e., not important nor urgent)
 
@@ -46,19 +49,25 @@ public class TestTask {
     }
 
     @Test
-    public void testConstructorWithException() {
+    public void testConstructorWithEmptyStringException() {
         try {
             task = new Task(null);
             fail("it didn't throw exception");
         } catch (EmptyStringException e) {
+        } catch (Exception e) {
         }
+    }
 
+    @Test
+    public void testConstructorWithEmptyStringException2() {
         try {
             task = new Task("");
             fail("it didn't throw exception");
         } catch (EmptyStringException e) {
+        } catch (Exception e) {
         }
     }
+
 
 
     @Test
@@ -346,7 +355,7 @@ public class TestTask {
             e.printStackTrace();
         }
 
-        assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 02 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: [#project, #cpsc210]}", task.toString());
+        assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 02 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: #project, #cpsc210}", task.toString());
 
     }
 
@@ -385,9 +394,11 @@ public class TestTask {
     public void testEqualsSameDescriptionSameDueDay() {
         Task task = null;
         try {
-            task = new Task();
+            task = new Task("test##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -397,9 +408,11 @@ public class TestTask {
         }
         Task task2 = null;
         try {
-            task2 = new Task();
+            task2 = new Task("test##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -414,9 +427,11 @@ public class TestTask {
     public void testEqualsDiffDescriptionDiffDueDay() {
         Task task = null;
         try {
-            task = new Task();
+            task = new Task("test1##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -424,11 +439,14 @@ public class TestTask {
         } catch (NullArgumentException e) {
             e.printStackTrace();
         }
+
         Task task2 = null;
         try {
-            task2 = new Task();
+            task2 = new Task("test##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {

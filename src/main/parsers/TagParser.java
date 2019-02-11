@@ -1,6 +1,7 @@
 package parsers;
 
 import model.*;
+import model.exceptions.EmptyStringException;
 import parsers.exceptions.ParsingException;
 
 import java.util.*;
@@ -16,9 +17,13 @@ public class TagParser extends Parser {
         String[] arrElement;
         String strDescription = "";
 
-        strDescription = separateStringToSet(input, setElement, strDescription);
+        strDescription = separateStringToSet(input, setElement, strDescription, task);
 
-        task.setDescription(strDescription);
+        try {
+            task.setDescription(strDescription);
+        } catch (EmptyStringException e) {
+            e.printStackTrace();
+        }
 
         ArrayList<String> arrDuedate = new ArrayList<>();
         ArrayList<String> arrStatus = new ArrayList<>();
@@ -87,32 +92,43 @@ public class TagParser extends Parser {
         }
     }
 
-    private String separateStringToSet(String input,
-                                       Set<String> setElement,
-                                       String strDescription) throws ParsingException {
+    private String separateStringToSet(String input, Set<String> setElement,
+                                       String strDescription, Task task) throws ParsingException {
         String[] arrElement = new String[]{};
         if (input.contains("##")) {
             // get description first
-            String[] arrInput = input.split("##");
-            strDescription = arrInput[0].trim();
+//            String[] arrInput = input.split("##");
+            strDescription = input.split("##")[0];
 
             //split the rest of string either by ;
-            if (arrInput.length >= 2) {
-                String newInput = arrInput[1];
-                arrElement = newInput.split(";");
+            if (input.split("##").length >= 2) {
+//                String newInput = input.split("##")[1].split(";");
+                arrElement = input.split("##")[1].split(";");
             }
 
         } else {
+            // there is no ## sign
+            try {
+                task.setDescription(input);
+            } catch (EmptyStringException e) {
+                e.printStackTrace();
+            }
+
+            //throws ParsingException if description does not contain the tag deliminator
             throw new ParsingException();
         }
 
         //push arrayList to non-duplicated set
+        arrToSet(setElement, arrElement);
+        return strDescription;
+    }
+
+    private void arrToSet(Set<String> setElement, String[] arrElement) {
         for (String var :
                 arrElement) {
             // delete space and convert to lower case
             setElement.add(var.trim().toLowerCase());
         }
-        return strDescription;
     }
 
     private void setTags(Task task, ArrayList<String> arrTags) {
@@ -122,7 +138,11 @@ public class TagParser extends Parser {
         } else {
             for (String t :
                     arrTags) {
-                task.addTag(t);
+                try {
+                    task.addTag(t);
+                } catch (EmptyStringException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

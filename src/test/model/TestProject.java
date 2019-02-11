@@ -4,6 +4,7 @@ import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import parsers.exceptions.ParsingException;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -61,11 +62,14 @@ public class TestProject {
         Task task3 = null;
 
         try {
-            task = new Task();
-            task2 = new Task();
+            task = new Task("test##");
+            task2 = new Task("test##");
 
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
+
         }
 
         try {
@@ -100,11 +104,13 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task();
-            task2 = new Task();
-            task3 = new Task();
+            task = new Task("test##");
+            task2 = new Task("test2##");
+            task3 = new Task("test3##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -137,6 +143,8 @@ public class TestProject {
             task3 = new Task("test3##");
 
         } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e) {
             fail();
         }
 
@@ -194,7 +202,9 @@ public class TestProject {
             task2 = new Task("test2##");
             task3 = new Task("test3##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
 
@@ -212,9 +222,11 @@ public class TestProject {
 
         Task task4 = null;
         try {
-            task4 = new Task("test4");
+            task4 = new Task("test4##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         List<Task> unmodifiedList = project.getTasks();
@@ -238,7 +250,9 @@ public class TestProject {
         try {
             task = new Task("test##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -251,7 +265,9 @@ public class TestProject {
         try {
             task2 = new Task("test2##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -263,7 +279,9 @@ public class TestProject {
         try {
             task3 = new Task("test3##");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
 
@@ -308,9 +326,11 @@ public class TestProject {
             task6 = new Task("test6##");
             task6.setStatus(Status.IN_PROGRESS);
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
         } catch (NullArgumentException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -340,16 +360,18 @@ public class TestProject {
         Task task2 = null;
         Task task3 = null;
         try {
-            task = new Task("test");
+            task = new Task("test##");
             task.setStatus(Status.DONE);
-            task2 = new Task("test2");
+            task2 = new Task("test2##");
             task2.setStatus(Status.DONE);
-            task3 = new Task("test3");
+            task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
         } catch (NullArgumentException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -377,9 +399,11 @@ public class TestProject {
             task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
         } catch (NullArgumentException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -407,9 +431,11 @@ public class TestProject {
             task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
         } catch (NullArgumentException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -437,9 +463,11 @@ public class TestProject {
             task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
         } catch (NullArgumentException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {
@@ -474,9 +502,11 @@ public class TestProject {
             task3 = new Task("test3##");
             task3.setStatus(Status.DONE);
         } catch (EmptyStringException e) {
-            e.printStackTrace();
+            fail();
         } catch (NullArgumentException e) {
-            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            fail();
         }
 
         try {

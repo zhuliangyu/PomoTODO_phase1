@@ -39,7 +39,6 @@ public class DueDate {
         } else {
             this.myDueDate = date;
         }
-
         this.nowDate = new Date();
     }
 

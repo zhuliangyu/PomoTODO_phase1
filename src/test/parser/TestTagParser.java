@@ -33,7 +33,19 @@ public class TestTagParser {
     }
 
     @Test
-    void test01NoException() {
+    void testConstructorWithoutTag() {
+        Task task = null;
+        try {
+            task = new Task(null);
+            fail();
+        } catch (Exception e) {
+        }
+
+    }
+
+
+    @Test
+    void test01TaskNoException() {
         //Register for the course. ## cpsc210; tomorrow; important; urgent; in progress
 
         //{
@@ -44,26 +56,22 @@ public class TestTagParser {
         //	Tags: #cpsc210
         //}
 
-        TagParser tp = new TagParser();
         Task task = null;
-
         try {
-            task = new Task();
+            task = new Task("Register for the course. ## cpsc210; tomorrow; important; urgent; in progress");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            tp.parse("Register for the course. ## cpsc210; tomorrow; important; urgent; in progress", task);
-        } catch (ParsingException e) {
+            fail();
+        } catch (Exception e) {
             fail();
         }
 
-        assertEquals("Register for the course.", task.getDescription());
+        assertEquals("Register for the course. ", task.getDescription());
         assertEquals(getTomorrowDueDate().toString(), task.getDueDate().toString());
         assertEquals("IN PROGRESS", task.getStatus().toString());
         assertEquals("IMPORTANT & URGENT", task.getPriority().toString());
         assertEquals("[#cpsc210]", task.getTags().toString());
+
+        System.out.println(task);
 
     }
 
@@ -73,22 +81,22 @@ public class TestTagParser {
         Task task = null;
 
         try {
-            task = new Task();
+            task = new Task("task1 ## today; tag1; tomorrow");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            tp.parse("task1 ## today; tag1; tomorrow", task);
-        } catch (ParsingException e) {
+            fail();
+        } catch (Exception e) {
             fail();
         }
 
-        assertEquals("task1", task.getDescription());
+
+        assertEquals("task1 ", task.getDescription());
         assertEquals(getTodayDueday().toString(), task.getDueDate().toString());
         assertEquals("TODO", task.getStatus().toString());
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#tag1, #tomorrow]", task.getTags().toString());
+
+        System.out.println(task);
+
     }
 
     @Test
@@ -97,22 +105,22 @@ public class TestTagParser {
         Task task = null;
 
         try {
-            task = new Task();
+            task = new Task("task2 ## in progress; tag2; up next");
         } catch (EmptyStringException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            tp.parse("task2 ## in progress; tag2; up next", task);
-        } catch (ParsingException e) {
+            fail();
+        } catch (Exception e) {
             fail();
         }
 
-        assertEquals("task2", task.getDescription());
+
+        assertEquals("task2 ", task.getDescription());
         assertEquals(null, task.getDueDate());
         assertEquals("IN PROGRESS", task.getStatus().toString());
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#up next, #tag2]", task.getTags().toString());
+
+        System.out.println(task);
+
     }
 
     @Test
@@ -121,105 +129,256 @@ public class TestTagParser {
         Task task = null;
 
         try {
-            task = new Task();
-        } catch (EmptyStringException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            tp.parse("task3 ## important; tag3; important", task);
-        } catch (ParsingException e) {
-            fail();
-        }
-
-        assertEquals("task3", task.getDescription());
-        assertEquals(null, task.getDueDate());
-        assertEquals("TODO", task.getStatus().toString());
-        assertEquals("IMPORTANT", task.getPriority().toString());
-        assertEquals("[#tag3]", task.getTags().toString());
-    }
-
-    @Test
-    void test04Task() {
-        TagParser tp = new TagParser();
-        Task task = null;
-
-        try {
             task = new Task("task3 ## important; tag3; important");
         } catch (EmptyStringException e) {
             fail();
+        } catch (Exception e) {
+            fail();
         }
 
-        assertEquals("task3", task.getDescription());
+        assertEquals("task3 ", task.getDescription());
         assertEquals(null, task.getDueDate());
         assertEquals("TODO", task.getStatus().toString());
         assertEquals("IMPORTANT", task.getPriority().toString());
         assertEquals("[#tag3]", task.getTags().toString());
+
+        System.out.println(task);
+
     }
 
     @Test
-    void test05NoException() {
-        TagParser tp = new TagParser();
-        Task task = null;
-
-        try {
-            task = new Task();
-        } catch (EmptyStringException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            tp.parse("task4 ## tomorrow; tag4; tag5; tomorrow", task);
-        } catch (ParsingException e) {
-            fail();
-        }
-
-        assertEquals("task4", task.getDescription());
-        assertEquals(getTomorrowDueDate().toString(), task.getDueDate().toString());
-        assertEquals("TODO", task.getStatus().toString());
-        assertEquals("DEFAULT", task.getPriority().toString());
-        assertEquals("[#tag4, #tag5]", task.getTags().toString());
-    }
-
-    @Test
-    void test05Task() {
+    void test05TaskNoException() {
         TagParser tp = new TagParser();
         Task task = null;
 
         try {
             task = new Task("task4 ## tomorrow; tag4; tag5; tomorrow");
-        } catch (EmptyStringException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            fail();
         }
 
 
-        assertEquals("task4", task.getDescription());
+        assertEquals("task4 ", task.getDescription());
         assertEquals(getTomorrowDueDate().toString(), task.getDueDate().toString());
         assertEquals("TODO", task.getStatus().toString());
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#tag4, #tag5]", task.getTags().toString());
+
+        System.out.println(task);
+
     }
 
+    @Test
+    void test06TaskNoException() {
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("This description has no tags.");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
 
 
+        assertEquals("This description has no tags.", task.getDescription());
+        assertEquals(null, task.getDueDate());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test07TaskNoException() {
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("       Task description ## tag1; tag2; tag3");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
 
 
+        assertEquals("       Task description ", task.getDescription());
+        assertEquals(null, task.getDueDate());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[#tag1, #tag2, #tag3]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test08TaskNoException() {
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("Task description with tags but not delimiter. tag1; tag2");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
+
+        assertEquals("Task description with tags but not delimiter. tag1; tag2", task.getDescription());
+        assertEquals(null, task.getDueDate());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test09TaskNoException() {
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("This description has just tag delimiter. ## ");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
+
+        assertEquals("This description has just tag delimiter. ", task.getDescription());
+        assertEquals(null, task.getDueDate());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test10TaskNoException() {
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("Task description ## tag1; TAG1; tag1");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
+
+        assertEquals("Task description ", task.getDescription());
+        assertEquals(null, task.getDueDate());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[#tag1]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test11TaskNoException() {
+        //Task t = new Task("Some description ## tag1     ; tag 1;     tag1;    ;   tag 2");
+//        {
+//            Description: Some description
+//            Due date:
+//            Status: TO DO
+//            Priority: DEFAULT
+//            Tags: #tag1, #tag 1, #tag 2
+//        }
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("Some description ## tag1     ; tag 1;     tag1;    ;   tag 2");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
+
+        assertEquals("Some description ", task.getDescription());
+        assertEquals(null, task.getDueDate());
+        assertEquals("TODO", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[#tag1, #tag 1, #tag 2]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test12TaskNoException() {
+        //Task t = new Task("Some description ## tag1;today;urgent;in progress;important");
+//        {
+//            Description: Some description
+//            Due date: Sat Feb 09 2019 11:59 PM
+//            Status: IN PROGRESS
+//            Priority: IMPORTANT & URGENT
+//            Tags: #tag1
+//        }
+        TagParser tp = new TagParser();
+        Task task = null;
+
+        try {
+            task = new Task("Some Some description ## tag1;today;urgent;in progress;important");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
+
+        }
+
+        assertEquals("Some Some description ", task.getDescription());
+        assertEquals(getTodayDueday().toString(), task.getDueDate().toString());
+        assertEquals("IN PROGRESS", task.getStatus().toString());
+        assertEquals("IMPORTANT & URGENT", task.getPriority().toString());
+        assertEquals("[#tag1]", task.getTags().toString());
+
+        System.out.println(task);
+
+    }
+
+    @Test
+    void test13TaskNoException() {
+//        Task t = new Task("Some description ## tag1;today;up next;tomorrow;in progress");
+//        {
+//            Description: Some description
+//            Due date: Sat Feb 09 2019 11:59 PM
+//            Status: UP NEXT
+//            Priority: DEFAULT
+//            Tags: #tag1, #tomorrow, #in progress
+//        }
 
 
+        TagParser tp = new TagParser();
+        Task task = null;
 
+        try {
+            task = new Task("Some description ## tag1;today;up next;tomorrow;in progress");
+        } catch (EmptyStringException e) {
+            fail();
+        } catch (Exception e){
 
+        }
 
+        assertEquals("Some description ", task.getDescription());
+        assertEquals(getTodayDueday().toString(), task.getDueDate().toString());
+        assertEquals("UP NEXT", task.getStatus().toString());
+        assertEquals("DEFAULT", task.getPriority().toString());
+        assertEquals("[#tag1, #in progress, #tomorrow]", task.getTags().toString());
 
+        System.out.println(task);
 
-
-
-
-
-
-
-
-
-
+    }
 
 
 

@@ -5,6 +5,7 @@ import model.exceptions.NullArgumentException;
 import parsers.TagParser;
 import parsers.exceptions.ParsingException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,46 +27,28 @@ public class Task {
     //    If description does not contain meta-data, the task is set to have no due date,
     //    status of 'To Do', and default priority level (i.e., not important nor urgent)
     //    if description is non-empty, it will throw exception
-    public Task(String description) throws EmptyStringException {
+    public Task(String description) throws EmptyStringException, NullArgumentException {
         setTagTask = new HashSet<Tag>();
 
         if (description == null || description.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
-//            this.descriptionTask = description;
-            Task tk = new Task();
             TagParser tp = new TagParser();
             try {
-                tp.parse(description, tk);
+                tp.parse(description, this);
             } catch (ParsingException e) {
                 //    If description does not contain meta-data, the task is set to have no due date,
                 //    status of 'To Do', and default priority level (i.e., not important nor urgent)
                 //    if description is non-empty, it will throw exception
-                e.printStackTrace();
                 dueDateTask = NO_DUE_DATE;
                 statusTask = Status.TODO;
                 priorityTask = new Priority();
             }
 
-            this.setDescription(tk.descriptionTask);
-            this.setDueDate(tk.dueDateTask);
-            this.setStatus(tk.statusTask);
-            this.setPriority(tk.priorityTask);
-            for (Tag tag :
-                    tk.getTags()) {
-                this.addTag(tag.getName());
-            }
+
         }
 
 
-    }
-
-    public Task() {
-        descriptionTask = "";
-        setTagTask = new HashSet<Tag>();
-        dueDateTask = NO_DUE_DATE;
-        statusTask = Status.TODO;
-        priorityTask = new Priority();
     }
 
 
@@ -80,7 +63,6 @@ public class Task {
             Tag tag = new Tag(tagName);
             setTagTask.add(tag);
         }
-
 
     }
 
@@ -159,7 +141,6 @@ public class Task {
     // MODIFIES: this
     // EFFECTS: sets the due date of this task
     public void setDueDate(DueDate dueDate) {
-
         if (dueDate == null) {
             this.dueDateTask = NO_DUE_DATE;
         }
@@ -189,20 +170,37 @@ public class Task {
     //    }
     @Override
     public String toString() {
+        String strTags = buildTagString();
+
+        // build dueDateString
+        String strDueDate = "";
+        if (this.dueDateTask != null) {
+            strDueDate = this.dueDateTask.toString();
+        }
 
         String str = String.format("{Description: %s Due date: %s Status: %s Priority: %s Tags: %s}",
-                this.descriptionTask, this.dueDateTask, this.statusTask, this.priorityTask, this.setTagTask);
-
-
-//        JSONObject obj = new JSONObject();
-//
-//        obj.put("Description", this.descriptionTask);
-//        obj.put("Due date", this.dueDateTask.toString());
-//        obj.put("Status", this.statusTask);
-//        obj.put("Priority", this.priorityTask.toString());
-//        obj.put("Tags", this.setTagTask);
-
+                this.descriptionTask, strDueDate, this.statusTask, this.priorityTask, strTags);
         return str;
+    }
+
+    private String buildTagString() {
+        //build tags string
+        StringBuilder strTagbuilder = new StringBuilder();
+        ArrayList<String> arrTags = new ArrayList<>();
+        for (Tag tag :
+                this.setTagTask) {
+            arrTags.add(tag.toString());
+        }
+
+        for (int i = 0; i < this.setTagTask.size(); i++) {
+            if (i != arrTags.size() - 1) {
+                strTagbuilder.append(arrTags.get(i) + ", ");
+            } else {
+                strTagbuilder.append(arrTags.get(i));
+            }
+        }
+
+        return strTagbuilder.toString();
     }
 
     @Override
@@ -217,7 +215,6 @@ public class Task {
 
     @Override
     public boolean equals(Object obj) {
-
         Task s = (Task) obj;
 
         if (this.dueDateTask != null) {

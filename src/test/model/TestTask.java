@@ -348,18 +348,18 @@ public class TestTask {
             e.printStackTrace();
         }
         try {
-            task.addTag("cpsc210");
             task.addTag("project");
+            task.addTag("cpsc210");
 
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
 
         assertEquals("{\n" +
-                "\tDescription: Read collaboration policy of the term project \n" +
-                "\tDue date: Sat Feb 02 2019 11:59 AM \n" +
-                "\tStatus: IN PROGRESS \n" +
-                "\tPriority: IMPORTANT & URGENT \n" +
+                "\tDescription: Read collaboration policy of the term project\n" +
+                "\tDue date: Sat Feb 02 2019 11:59 AM\n" +
+                "\tStatus: IN PROGRESS\n" +
+                "\tPriority: IMPORTANT & URGENT\n" +
                 "\tTags: #project, #cpsc210\n" +
                 "}", task.toString());
 

@@ -25,6 +25,7 @@ public class TagParser extends Parser {
             e.printStackTrace();
         }
 
+
         ArrayList<String> arrDuedate = new ArrayList<>();
         ArrayList<String> arrStatus = new ArrayList<>();
         ArrayList<String> arrPriority = new ArrayList<>();
@@ -42,6 +43,8 @@ public class TagParser extends Parser {
         setTags(task, arrTags);
 
     }
+
+
 
     private void categorizeElement(Set<String> setElement,
                                    ArrayList<String> arrDuedate,
@@ -61,34 +64,6 @@ public class TagParser extends Parser {
                 arrTags.add(ele);
             }
 
-//            switch (ele) {
-//                case "important":
-//                    arrPriority.add("important");
-//                    break;
-//                case "urgent":
-//                    arrPriority.add("urgent");
-//                    break;
-//                case "today":
-//                    arrDuedate.add("today");
-//                    break;
-//                case "tomorrow":
-//                    arrDuedate.add("tomorrow");
-//                    break;
-//                case "to do":
-//                    arrStatus.add("to do");
-//                    break;
-//                case "up next":
-//                    arrStatus.add("up next");
-//                    break;
-//                case "in progress":
-//                    arrStatus.add("in progress");
-//                    break;
-//                case "done":
-//                    arrStatus.add("done");
-//                    break;
-//                default:
-//                    arrTags.add(ele);
-//            }
         }
     }
 
@@ -110,16 +85,21 @@ public class TagParser extends Parser {
             // there is no ## sign
             try {
                 task.setDescription(input);
+                this.description = input;
             } catch (EmptyStringException e) {
                 e.printStackTrace();
             }
 
             //throws ParsingException if description does not contain the tag deliminator
-            throw new ParsingException();
+            throw new ParsingException("Parsing Error");
         }
 
         //push arrayList to non-duplicated set
         arrToSet(setElement, arrElement);
+
+        this.description = strDescription;
+
+
         return strDescription;
     }
 

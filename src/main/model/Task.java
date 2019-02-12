@@ -2,13 +2,10 @@ package model;
 
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
-import parsers.TagParser;
+import parsers.TagParser2;
 import parsers.exceptions.ParsingException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 // Represents a Task having a description, status, priorities, set of tags and due date.
@@ -28,12 +25,13 @@ public class Task {
     //    status of 'To Do', and default priority level (i.e., not important nor urgent)
     //    if description is non-empty, it will throw exception
     public Task(String description) throws EmptyStringException, NullArgumentException {
-        setTagTask = new HashSet<Tag>();
+        setTagTask = new LinkedHashSet<>();
+//        setTagTask = new HashSet<>();
 
         if (description == null || description.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
-            TagParser tp = new TagParser();
+            TagParser2 tp = new TagParser2();
             try {
                 tp.parse(description, this);
             } catch (ParsingException e) {
@@ -62,6 +60,7 @@ public class Task {
         } else {
             Tag tag = new Tag(tagName);
             setTagTask.add(tag);
+
         }
 
     }
@@ -170,6 +169,7 @@ public class Task {
     //    }
     @Override
     public String toString() {
+
         String strTags = buildTagString();
 
         // build dueDateString
@@ -178,9 +178,9 @@ public class Task {
             strDueDate = this.dueDateTask.toString();
         }
 
-        String str = String.format("{\n\tDescription: %s "
-                        + "\n\tDue date: %s \n\tStatus: %s "
-                        + "\n\tPriority: %s \n\tTags: %s\n}",
+        String str = String.format("{\n\tDescription: %s"
+                        + "\n\tDue date: %s\n\tStatus: %s"
+                        + "\n\tPriority: %s\n\tTags: %s\n}",
                 this.descriptionTask, strDueDate, this.statusTask, this.priorityTask, strTags);
         return str;
     }
@@ -202,6 +202,9 @@ public class Task {
             }
         }
 
+        if (setTagTask.size() == 0) {
+            return " ";
+        }
         return strTagbuilder.toString();
     }
 

@@ -3,35 +3,91 @@ package parser;
 import model.DueDate;
 import model.Task;
 import model.exceptions.EmptyStringException;
-import model.exceptions.InvalidTimeException;
-import model.exceptions.NullArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parsers.Parser;
-import parsers.TagParser;
+import parsers.TagParser2;
 import parsers.exceptions.ParsingException;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class TestTagParser {
+public class TestTagParser2 {
 
     private DueDate today;
     private DueDate tomorrow;
+    private TagParser2 tp;
 
     @BeforeEach
     void runBefore() {
+        tp = new TagParser2();
 
 //        today = new DueDate();
 //        tomorrow = new DueDate(today.postponeNdays(new Date(), 1));
 //        today = new GregorianCalendar(2019, Calendar.FEBRUARY, 7, 23, 59).getTime();
 //        tomorrow = new GregorianCalendar(2019, Calendar.FEBRUARY, 8, 23, 59).getTime();
     }
+
+
+    @Test
+    void testgetTaskDescription() {
+        assertEquals("asdasd ", tp.getTaskDescription("asdasd ##"));
+        assertEquals("asdasd", tp.getTaskDescription("asdasd"));
+    }
+
+
+    @Test
+    void testextractTags() {
+        assertEquals(0, tp.extractTags("asdasd ##").size());
+        assertEquals(0, tp.extractTags("asdasd ##").size());
+        assertEquals(3, tp.extractTags("asdasd## asd;das;a").size());
+    }
+
+    @Test
+    void testcleanTags() {
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add(" ");
+        arr.add("");
+        arr.add(null);
+        arr.add("           asd           ");
+        arr.add("           Dsd           ");
+
+        assertEquals("[asd, Dsd]", tp.cleanTags(arr).toString());
+    }
+
+
+
+
+
+
+    @Test
+    void testremoveDuplicate() {
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add(" ");
+        arr.add("");
+        arr.add(null);
+        arr.add("           asd           ");
+        arr.add("Bsd");
+
+        arr.add("           Asd           ");
+        arr.add("bsD");
+
+        arr = tp.cleanTags(arr);
+        assertEquals("[asd, Bsd]", tp.removeDuplicate(arr).toString());
+    }
+
+
+
+
+
+
+
+
 
     @Test
     void testConstructorWithoutTag() {
@@ -43,6 +99,9 @@ public class TestTagParser {
         }
 
     }
+
+
+
 
 
     @Test
@@ -85,7 +144,7 @@ public class TestTagParser {
 
     @Test
     void test02NoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
@@ -109,7 +168,7 @@ public class TestTagParser {
 
     @Test
     void test03NoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
@@ -133,7 +192,7 @@ public class TestTagParser {
 
     @Test
     void test04NoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
@@ -156,7 +215,7 @@ public class TestTagParser {
 
     @Test
     void test05TaskNoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
@@ -178,14 +237,14 @@ public class TestTagParser {
 
     @Test
     void test06TaskNoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("This description has no tags.");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -209,14 +268,14 @@ public class TestTagParser {
 
     @Test
     void test07TaskNoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("       Task description ## tag1; tag2; tag3");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -227,20 +286,26 @@ public class TestTagParser {
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#tag1, #tag2, #tag3]", task.getTags().toString());
 
-        System.out.println(task);
+        assertEquals("{\n" +
+                "\tDescription:        Task description \n" +
+                "\tDue date: \n" +
+                "\tStatus: TODO\n" +
+                "\tPriority: DEFAULT\n" +
+                "\tTags: #tag1, #tag2, #tag3\n" +
+                "}", task.toString());
 
     }
 
     @Test
     void test08TaskNoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("Task description with tags but not delimiter. tag1; tag2");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -257,20 +322,19 @@ public class TestTagParser {
                 "\tPriority: DEFAULT\n" +
                 "\tTags:  \n" +
                 "}", task.toString());
-        System.out.println(task);
 
     }
 
     @Test
     void test09TaskNoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("This description has just tag delimiter. ## ");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -280,7 +344,6 @@ public class TestTagParser {
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[]", task.getTags().toString());
 
-        System.out.println(task);
         assertEquals("{\n" +
                 "\tDescription: This description has just tag delimiter. \n" +
                 "\tDue date: \n" +
@@ -293,14 +356,14 @@ public class TestTagParser {
 
     @Test
     void test10TaskNoException() {
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("Task description ## tag1; TAG1; tag1");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -310,7 +373,6 @@ public class TestTagParser {
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#tag1]", task.getTags().toString());
 
-        System.out.println(task);
 
         assertEquals("{\n" +
                 "\tDescription: Task description \n" +
@@ -332,14 +394,14 @@ public class TestTagParser {
 //            Priority: DEFAULT
 //            Tags: #tag1, #tag 1, #tag 2
 //        }
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("Some description ## tag1     ; tag 1;     tag1;    ;   tag 2");
         } catch (EmptyStringException e) {
 //            fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -349,7 +411,13 @@ public class TestTagParser {
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#tag1, #tag 1, #tag 2]", task.getTags().toString());
 
-        System.out.println(task);
+        assertEquals("{\n" +
+                "\tDescription: Some description \n" +
+                "\tDue date: \n" +
+                "\tStatus: TODO\n" +
+                "\tPriority: DEFAULT\n" +
+                "\tTags: #tag1, #tag 1, #tag 2\n" +
+                "}", task.toString());
 
     }
 
@@ -363,14 +431,14 @@ public class TestTagParser {
 //            Priority: IMPORTANT & URGENT
 //            Tags: #tag1
 //        }
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("Some description ## tag1;today;urgent;in progress;important");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -380,7 +448,13 @@ public class TestTagParser {
         assertEquals("IMPORTANT & URGENT", task.getPriority().toString());
         assertEquals("[#tag1]", task.getTags().toString());
 
-        System.out.println(task);
+//        assertEquals("{\n" +
+//                "\tDescription: Some description \n" +
+//                "\tDue date: Sat Feb 09 2019 11:59 PM\n" +
+//                "\tStatus: IN PROGRESS\n" +
+//                "\tPriority: IMPORTANT & URGENT\n" +
+//                "\tTags: #tag1\n" +
+//                "}", task.toString());
 
     }
 
@@ -396,14 +470,14 @@ public class TestTagParser {
 //        }
 
 
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("Some description ## tag1;today;up next;tomorrow;in progress");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -413,13 +487,19 @@ public class TestTagParser {
         assertEquals("DEFAULT", task.getPriority().toString());
         assertEquals("[#tag1, #tomorrow, #in progress]", task.getTags().toString());
 
-        System.out.println(task);
+//        assertEquals("{\n" +
+//                "\tDescription: Some description \n" +
+//                "\tDue date: Sat Feb 09 2019 11:59 PM\n" +
+//                "\tStatus: UP NEXT\n" +
+//                "\tPriority: DEFAULT\n" +
+//                "\tTags: #tag1, #tomorrow, #in progress\n" +
+//                "}", task.toString());
 
     }
 
     @Test
-    void testGetDescription(){
-        Parser p = new TagParser();
+    void testGetDescription() {
+        Parser p = new TagParser2();
         Task t = new Task("My task");
         try {
             p.parse("Some description ## tag1; tag2", t);
@@ -434,8 +514,8 @@ public class TestTagParser {
     }
 
     @Test
-    void testGetDescription2(){
-        Parser p = new TagParser();
+    void testGetDescription2() {
+        Parser p = new TagParser2();
         Task t = new Task("My task");
         try {
             p.parse("Some description tag1; tag2", t);
@@ -459,14 +539,14 @@ public class TestTagParser {
 //        }
 
 
-        TagParser tp = new TagParser();
+        TagParser2 tp = new TagParser2();
         Task task = null;
 
         try {
             task = new Task("Some description ## tAg1; tag1; TAG1; tag1");
         } catch (EmptyStringException e) {
             fail();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -478,11 +558,8 @@ public class TestTagParser {
                 "\tTags: #tAg1\n" +
                 "}", task.toString());
 
-        System.out.println(task);
 
     }
-
-
 
 
     private DueDate getTodayDueday() {

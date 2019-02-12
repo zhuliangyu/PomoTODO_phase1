@@ -178,7 +178,9 @@ public class Task {
             strDueDate = this.dueDateTask.toString();
         }
 
-        String str = String.format("{Description: %s Due date: %s Status: %s Priority: %s Tags: %s}",
+        String str = String.format("{\n\tDescription: %s "
+                        + "\n\tDue date: %s \n\tStatus: %s "
+                        + "\n\tPriority: %s \n\tTags: %s\n}",
                 this.descriptionTask, strDueDate, this.statusTask, this.priorityTask, strTags);
         return str;
     }

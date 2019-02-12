@@ -355,7 +355,13 @@ public class TestTask {
             e.printStackTrace();
         }
 
-        assertEquals("{Description: Read collaboration policy of the term project Due date: Sat Feb 02 2019 11:59 AM Status: IN PROGRESS Priority: IMPORTANT & URGENT Tags: #project, #cpsc210}", task.toString());
+        assertEquals("{\n" +
+                "\tDescription: Read collaboration policy of the term project \n" +
+                "\tDue date: Sat Feb 02 2019 11:59 AM \n" +
+                "\tStatus: IN PROGRESS \n" +
+                "\tPriority: IMPORTANT & URGENT \n" +
+                "\tTags: #project, #cpsc210\n" +
+                "}", task.toString());
 
     }
 

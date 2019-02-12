@@ -2,7 +2,7 @@ package model;
 
 import model.exceptions.EmptyStringException;
 import model.exceptions.NullArgumentException;
-import parsers.TagParser2;
+import parsers.TagParser;
 import parsers.exceptions.ParsingException;
 
 import java.util.*;
@@ -31,7 +31,7 @@ public class Task {
         if (description == null || description.isEmpty()) {
             throw new EmptyStringException("The string is empty.");
         } else {
-            TagParser2 tp = new TagParser2();
+            TagParser tp = new TagParser();
             try {
                 tp.parse(description, this);
             } catch (ParsingException e) {

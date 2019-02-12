@@ -1,6 +1,9 @@
 package parsers;
 
-import model.*;
+import model.DueDate;
+import model.Priority;
+import model.Status;
+import model.Task;
 import model.exceptions.EmptyStringException;
 import parsers.exceptions.ParsingException;
 
@@ -12,104 +15,116 @@ public class TagParser extends Parser {
 
     @Override
     public void parse(String input, Task task) throws ParsingException {
-        // delete duplicate elements
-        Set<String> setElement = new HashSet();
-        String[] arrElement;
-        String strDescription = "";
-
-        strDescription = separateStringToSet(input, setElement, strDescription, task);
-
+        String strDescription = getTaskDescription(input);
+        this.description = strDescription;
+        // set description
         try {
             task.setDescription(strDescription);
         } catch (EmptyStringException e) {
             e.printStackTrace();
         }
 
+        if (!input.contains("##")) {
+            throw new ParsingException();
+        }
 
-        ArrayList<String> arrDuedate = new ArrayList<>();
-        ArrayList<String> arrStatus = new ArrayList<>();
+        ArrayList<String> tagsList = extractTags(input);
+
+        tagsList = cleanTags(tagsList);
+
+        tagsList = removeDuplicate(tagsList);
+
+
+        String myDueDate = null;
+        String myStatus = null;
         ArrayList<String> arrPriority = new ArrayList<>();
-        ArrayList<String> arrTags = new ArrayList<>();
 
-        //according to the order from element, put each element inside the array
-        categorizeElement(setElement, arrDuedate, arrStatus, arrPriority, arrTags);
+        ArrayList<String> arrRealTags = new ArrayList<>();
+
+        setTask(task, tagsList, myDueDate, myStatus, arrPriority, arrRealTags);
+
+    }
+
+    private void setTask(Task task, ArrayList<String> tagsList, String myDueDate, String myStatus,
+                         ArrayList<String> arrPriority, ArrayList<String> arrRealTags) {
+        for (String var :
+                tagsList) {
+            if (isDueDate(var) && myDueDate == null) {
+                myDueDate = var;
+            } else if (isStatus(var) && myStatus == null) {
+                myStatus = var;
+            } else if (isPriority(var)) {
+                arrPriority.add(var);
+            } else {
+                arrRealTags.add(var);
+            }
+
+        }
 
         setPriority(task, arrPriority);
-
-        setDueDate(task, arrDuedate, arrTags);
-
-        setStatus(task, arrStatus, arrTags);
-
-        setTags(task, arrTags);
-
+        setDueDate(task, myDueDate);
+        setStatus(task, myStatus);
+        setTags(task, arrRealTags);
     }
 
-
-
-    private void categorizeElement(Set<String> setElement,
-                                   ArrayList<String> arrDuedate,
-                                   ArrayList<String> arrStatus,
-                                   ArrayList<String> arrPriority,
-                                   ArrayList<String> arrTags) {
-        for (String ele : setElement) {
-
-            if (ele.equals("important") || ele.equals("urgent")) {
-                arrPriority.add(ele);
-            } else if (ele.equals("today") || ele.equals("tomorrow")) {
-                arrDuedate.add(ele);
-            } else if (ele.equals("to do") || ele.equals("up next")
-                    || ele.equals("in progress") || ele.equals("done")) {
-                arrStatus.add(ele);
+    public ArrayList<String> cleanTags(ArrayList<String> tagsList) {
+        ArrayList<String> newList = new ArrayList();
+        for (String ele : tagsList) {
+            if (ele == null || ele.trim().isEmpty()) {
+                //do nothing
             } else {
-                arrTags.add(ele);
+                newList.add(ele.trim());
             }
-
         }
+        return newList;
     }
 
-    private String separateStringToSet(String input, Set<String> setElement,
-                                       String strDescription, Task task) throws ParsingException {
-        String[] arrElement = new String[]{};
+    public ArrayList<String> removeDuplicate(ArrayList<String> tagsList) {
+        ArrayList<String> newList = new ArrayList();
+
+        TreeSet<String> seen = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+
+        tagsList.removeIf(s -> !seen.add(s));
+        return tagsList;
+
+    }
+
+    public String getTaskDescription(String input) {
         if (input.contains("##")) {
-            // get description first
-//            String[] arrInput = input.split("##");
-            strDescription = input.split("##")[0];
-
-            //split the rest of string either by ;
-            if (input.split("##").length >= 2) {
-//                String newInput = input.split("##")[1].split(";");
-                arrElement = input.split("##")[1].split(";");
-            }
-
+            return input.split("##")[0];
         } else {
             // there is no ## sign
-            try {
-                task.setDescription(input);
-                this.description = input;
-            } catch (EmptyStringException e) {
-                e.printStackTrace();
-            }
-
-            //throws ParsingException if description does not contain the tag deliminator
-            throw new ParsingException("Parsing Error");
+            return input;
         }
 
-        //push arrayList to non-duplicated set
-        arrToSet(setElement, arrElement);
-
-        this.description = strDescription;
-
-
-        return strDescription;
     }
 
-    private void arrToSet(Set<String> setElement, String[] arrElement) {
-        for (String var :
-                arrElement) {
-            // delete space and convert to lower case
-            setElement.add(var.trim().toLowerCase());
+    // separate input to description and tags
+    // return description
+    public ArrayList<String> extractTags(String input) {
+        ArrayList<String> tagsList;
+        if (input.split("##").length >= 2) {
+            String[] temp = input.split("##")[1].split(";");
+            return tagsList = new ArrayList<String>(Arrays.asList(temp));
         }
+
+        return tagsList = new ArrayList<String>();
+
     }
+
+    public boolean isPriority(String str) {
+        return (str.equals("important") || str.equals("urgent"));
+    }
+
+    public boolean isDueDate(String str) {
+        return (str.equals("today") || str.equals("tomorrow"));
+    }
+
+    public boolean isStatus(String str) {
+        return (str.equals("to do") || str.equals("up next")
+                || str.equals("in progress") || str.equals("done"));
+    }
+
 
     private void setTags(Task task, ArrayList<String> arrTags) {
         if (arrTags.size() == 0) {
@@ -127,28 +142,21 @@ public class TagParser extends Parser {
         }
     }
 
-    private void setStatus(Task task, ArrayList<String> arrStatus, ArrayList<String> arrTags) {
-        if (arrStatus.size() == 0) {
+    private void setStatus(Task task, String str) {
+        if (str == null || str.isEmpty()) {
             //default
             task.setStatus(Status.TODO);
         } else {
-            Status st = matchStatus(arrStatus.get(0));
+            Status st = matchStatus(str);
             task.setStatus(st);
-
-            // put the reset to the tags
-            for (int i = 0; i < arrStatus.size(); i++) {
-                if (i > 0) {
-                    arrTags.add(arrStatus.get(i));
-                }
-            }
         }
     }
 
-    private void setDueDate(Task task, ArrayList<String> arrDuedate, ArrayList<String> arrTags) {
-        if (arrDuedate.size() == 0) {
+    private void setDueDate(Task task, String str) {
+        if (str == null || str.isEmpty()) {
             task.setDueDate(null);
         } else {
-            if (arrDuedate.get(0).equals("today")) {
+            if (str.equals("today")) {
                 // today
                 task.setDueDate(new DueDate(getTodayDate()));
             } else {
@@ -156,12 +164,6 @@ public class TagParser extends Parser {
                 task.setDueDate(new DueDate(getTomorrowDate()));
             }
 
-            // put the reset to the tags
-            for (int i = 0; i < arrDuedate.size(); i++) {
-                if (i > 0) {
-                    arrTags.add(arrDuedate.get(i));
-                }
-            }
         }
     }
 

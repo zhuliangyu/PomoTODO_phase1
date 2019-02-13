@@ -113,16 +113,21 @@ public class TagParser extends Parser {
     }
 
     public boolean isPriority(String str) {
-        return (str.equals("important") || str.equals("urgent"));
+        return (str.toLowerCase().equals("important")
+                || str.toLowerCase().equals("urgent"));
     }
 
     public boolean isDueDate(String str) {
-        return (str.equals("today") || str.equals("tomorrow"));
+
+        return (str.toLowerCase().equals("today")
+                || str.toLowerCase().equals("tomorrow"));
     }
 
     public boolean isStatus(String str) {
-        return (str.equals("to do") || str.equals("up next")
-                || str.equals("in progress") || str.equals("done"));
+        return (str.toLowerCase().equals("to do")
+                || str.toLowerCase().equals("up next")
+                || str.toLowerCase().equals("in progress")
+                || str.toLowerCase().equals("done"));
     }
 
 
@@ -156,7 +161,7 @@ public class TagParser extends Parser {
         if (str == null || str.isEmpty()) {
             task.setDueDate(null);
         } else {
-            if (str.equals("today")) {
+            if (str.toLowerCase().equals("today")) {
                 // today
                 task.setDueDate(new DueDate(getTodayDate()));
             } else {
@@ -176,9 +181,9 @@ public class TagParser extends Parser {
 
             //set new Priority
             for (int i = 0; i < arrPriority.size(); i++) {
-                if (arrPriority.get(i).equals("important")) {
+                if (arrPriority.get(i).toLowerCase().equals("important")) {
                     p.setImportant(true);
-                } else if (arrPriority.get(i).equals("urgent")) {
+                } else if (arrPriority.get(i).toLowerCase().equals("urgent")) {
                     p.setUrgent(true);
                 }
             }
@@ -188,13 +193,13 @@ public class TagParser extends Parser {
     }
 
     private Status matchStatus(String s) {
-        if (s.equals("to do")) {
+        if (s.toLowerCase().equals("to do")) {
             return Status.TODO;
-        } else if (s.equals("up next")) {
+        } else if (s.toLowerCase().equals("up next")) {
             return Status.UP_NEXT;
-        } else if (s.equals("in progress")) {
+        } else if (s.toLowerCase().equals("in progress")) {
             return Status.IN_PROGRESS;
-        } else if (s.equals("done")) {
+        } else if (s.toLowerCase().equals("done")) {
             return Status.DONE;
         }
         return Status.TODO;

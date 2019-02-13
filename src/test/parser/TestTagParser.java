@@ -434,7 +434,7 @@ public class TestTagParser {
         Task task = null;
 
         try {
-            task = new Task("Some description ## tag1;today;urgent;in progress;important");
+            task = new Task("Some description ## tag1;today;UrgeNt;in progrESs;imPortant");
         } catch (EmptyStringException e) {
             fail();
         } catch (Exception e) {
@@ -473,7 +473,7 @@ public class TestTagParser {
         Task task = null;
 
         try {
-            task = new Task("Some description ## tag1;today;up next;tomorrow;in progress");
+            task = new Task("Some description ## tag1;tOdAy;uP nExt;tomorrow;in progress");
         } catch (EmptyStringException e) {
             fail();
         } catch (Exception e) {
